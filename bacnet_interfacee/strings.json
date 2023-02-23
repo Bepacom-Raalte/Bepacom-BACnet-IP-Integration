@@ -1,0 +1,17 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Write the hostname or IP of the BACnet/IP add-on",
+        "data": {
+          "entities": "Entities"
+        },
+        "data_description": {
+          "entities": "The entities to add to the group"
+        }
+      }
+    }
+  }
+}
+//Use strings.json to update actual text
