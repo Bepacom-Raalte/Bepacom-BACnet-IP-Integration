@@ -20,7 +20,7 @@ It currently supports these BACnet object types:
 
 First install the Bepacom BACnet/IP add-on.
 
-###![BACnet/IP Add-on][bacnet-addon]
+###BACnet/IP Add-on[bacnet-addon]
 
 Copy this integration to your Home Assistant's 'custom_components' folder.
 
