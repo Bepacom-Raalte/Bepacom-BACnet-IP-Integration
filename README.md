@@ -6,4 +6,4 @@ This repository is intended to be a collection of custom components created by B
 
 This repository includes the following integrations:
 
-### [BACnet Interface](./bacnetinterface)
+### [BACnet Interface](./bacnet_interface)
