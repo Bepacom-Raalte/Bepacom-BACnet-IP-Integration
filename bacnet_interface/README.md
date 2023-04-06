@@ -2,13 +2,11 @@
 
 This integration is intended to display the data from the Bepacom EcoPanel BACnet Interface add-on on the Lovelace UI of Home Assistant.
 
-It supports various BACnet object types, such as:
+It currently supports these BACnet object types:
 
-- Accumulator
 - Analog Input
 - Analog Output
 - Analog Value
-- Averaging
 - Binary Input
 - Binary Output
 - Binary Value
@@ -16,7 +14,13 @@ It supports various BACnet object types, such as:
 - Multi State Output
 - Multi State Value
 
+
+
 # Installation
+
+First install the Bepacom BACnet/IP add-on.
+
+###[BACnet/IP Add-on][bacnet-addon]
 
 Copy this integration to your Home Assistant's 'custom_components' folder.
 
@@ -30,3 +34,4 @@ If there is an error, be sure to check your supervisor logs.
 
 Make sure the add-on is running. If there was a problem with the add-on, reload the integration after solving the issue.
 
+[bacnet-addon]: https://github.com/Bepacom-Raalte/bepacom-HA-Addons/tree/main/bacnetinterface
