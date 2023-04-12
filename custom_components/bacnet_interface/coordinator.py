@@ -90,7 +90,6 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
         asyncio.create_task(listen())
 
     async def _async_update_data(self) -> DeviceDict:
-
         try:
             devicedict = await self.interface.update(
                 full_update=not self.last_update_success

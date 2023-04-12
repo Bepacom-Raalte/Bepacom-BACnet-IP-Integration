@@ -57,7 +57,6 @@ async def async_setup_entry(
 class MultiStateOutputEntity(
     CoordinatorEntity[EcoPanelDataUpdateCoordinator], SelectEntity
 ):
-
     _attr_has_entity_name = True
 
     def __init__(
@@ -148,7 +147,6 @@ class MultiStateOutputEntity(
 class MultiStateValueEntity(
     CoordinatorEntity[EcoPanelDataUpdateCoordinator], SelectEntity
 ):
-
     _attr_has_entity_name = True
 
     def __init__(

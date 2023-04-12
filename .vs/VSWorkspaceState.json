@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\bacnet_interface"
+    "\\custom_components"
   ],
+  "SelectedNode": "\\custom_components",
   "PreviewInSolutionExplorer": false
 }

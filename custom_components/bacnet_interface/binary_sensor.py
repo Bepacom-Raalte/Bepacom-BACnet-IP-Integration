@@ -47,7 +47,6 @@ async def async_setup_entry(
 class BinaryInputEntity(
     CoordinatorEntity[EcoPanelDataUpdateCoordinator], BinarySensorEntity
 ):
-
     _attr_has_entity_name = True
 
     def __init__(

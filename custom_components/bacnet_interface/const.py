@@ -1,4 +1,4 @@
-"""Constants for the Detailed Hello World Push integration."""
+"""Constants for the Bepacom BACnet/IP integration."""
 import logging
 from datetime import timedelta
 
@@ -8,14 +8,3 @@ DOMAIN = "bacnet_interface"
 
 LOGGER = logging.getLogger(__package__)
 SCAN_INTERVAL = timedelta(seconds=60)
-
-# BACnet Engineering Units
-Units = [
-    'm²', 
-    'ft²',
-    'mA',
-    'm³/d', 
-    'm³/h', 
-    'm³/m', 
-    'm³/s',
-    ]

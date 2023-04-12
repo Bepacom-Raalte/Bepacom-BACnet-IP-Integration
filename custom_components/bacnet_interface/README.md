@@ -15,7 +15,6 @@ It currently supports these BACnet object types:
 - Multi State Value
 
 
-
 # Installation
 
 First install the Bepacom BACnet/IP add-on from here: 

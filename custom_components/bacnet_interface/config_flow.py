@@ -5,17 +5,15 @@ from typing import Any
 
 import voluptuous as vol
 from aioecopanel import DeviceDict, EcoPanelConnectionError, Interface
-from homeassistant.components import onboarding, zeroconf, dhcp
+from homeassistant.components import dhcp, network, onboarding, zeroconf
 from homeassistant.config_entries import (CONN_CLASS_LOCAL_PUSH, ConfigEntry,
                                           ConfigFlow, OptionsFlow)
 from homeassistant.const import CONF_HOST, CONF_MAC
-from homeassistant.core import callback
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-
 from .const import DOMAIN, LOGGER  # pylint:disable=unused-import
-
 
 _LOGGER = LOGGER
 
@@ -24,23 +22,37 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for the EcoPanel."""
 
     VERSION = 1
-    # Pick one of the available connection classes in homeassistant/config_entries.py
-    # This tells HA if it should be asking for updates, or it'll be notified of updates
-    # automatically. This example uses PUSH, as the dummy hub will notify HA of
-    # changes.
     CONNECTION_CLASS = CONN_CLASS_LOCAL_PUSH
 
-    # @staticmethod
-    # @callback
-    # def async_get_options_flow(config_entry: ConfigEntry) -> EcoPanelOptionsFlowHandler:
-    #    """Get the options flow for this handler."""
-    #    return EcoPanelOptionsFlowHandler(config_entry)
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry):
+        """Get the options flow."""
+        return OptionsFlowHandler(config_entry)
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Handle a flow initiated by the user."""
+
         errors = {}
+
+        if self._async_current_entries():
+            return self.async_abort(reason="single_instance_allowed")
+        if self.hass.data.get(DOMAIN):
+            return self.async_abort(reason="single_instance_allowed")
+
+        adapters = await network.async_get_adapters(self.hass)
+
+        # Get functional IP address for the user...
+        for adapter in adapters:
+            for ip_info in adapter["ipv4"]:
+                try:
+                    devicedict = await self._async_get_device(ip_info["address"])
+                    ip_addr = ip_info["address"]
+                    break
+                except:
+                    continue
 
         if user_input is not None:
             try:
@@ -57,22 +69,17 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
         else:
             user_input = {}
 
-        return self.async_show_form(
-            step_id="user",
-            data_schema=vol.Schema({vol.Required(CONF_HOST): str}),
-            errors=errors or {},
-        )
-
-    async def async_step_dhcp(self, discovery_info: dhcp.DhcpServiceInfo) -> FlowResult:
-        logging.info(self.discovered_url)
-        logging.info(discovery_info.macaddress)
-
-    async def async_step_hassio(self, discovery_info: dict[str, Any]) -> FlowResult:
-        """Prepare configuration for a Hass.io AdGuard Home add-on.
-        This flow is triggered by the discovery component.
-        """
-        logging.info(discovery_info)
-        self._hassio_discovery = discovery_info
+            return self.async_show_form(
+                step_id="user",
+                data_schema=vol.Schema(
+                    {
+                        vol.Required(
+                            CONF_HOST, description={"suggested_value": ip_addr}
+                        ): str
+                    }
+                ),
+                errors=errors or {},
+            )
 
     async def _async_get_device(self, host: str) -> DeviceDict:
         """Get device information from WLED device."""
@@ -81,25 +88,39 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
         return await interface.update()
 
 
-# class EcoPanelOptionsFlowHandler(OptionsFlow):
-#    """Handle WLED options."""
+class OptionsFlowHandler(OptionsFlow):
+    """Handle Options."""
 
-#    def __init__(self, config_entry: ConfigEntry) -> None:
-#        """Initialize WLED options flow."""
-#        self.config_entry = config_entry
+    def __init__(self, config_entry: ConfigEntry) -> None:
+        """Initialize options flow."""
+        self.config_entry = config_entry
 
-#    async def async_step_init(
-#        self, user_input: dict[str, Any] | None = None
-#    ) -> FlowResult:
-#        """Manage EcoPanel options."""
-#        if user_input is not None:
-#            return self.async_create_entry(title="", data=user_input)
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manage EcoPanel options."""
+        errors = {}
 
-#        return self.async_show_form(
-#            step_id="user",
-#            data_schema=vol.Schema(
-#                {
-#                    vol.Required(CONF_HOST):str
-#                    }
-#                ),
-#        )
+        if user_input is not None:
+            # Update config entry with data from user input
+
+            self.hass.config_entries.async_update_entry(
+                self.config_entry, data=user_input
+            )
+            return self.async_create_entry(
+                title=self.config_entry.title, data=user_input
+            )
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_HOST,
+                        description={
+                            "suggested_value": self.config_entry.data.get(CONF_HOST)
+                        },
+                    ): str
+                }
+            ),
+        )

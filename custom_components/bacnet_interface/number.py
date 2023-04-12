@@ -7,10 +7,9 @@ from homeassistant.components.number import (NumberDeviceClass, NumberEntity,
                                              NumberEntityDescription)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (DATA_BYTES, ELECTRIC_CURRENT_MILLIAMPERE,
-                                 PERCENTAGE,
+                                 ELECTRIC_POTENTIAL_MILLIVOLT, PERCENTAGE,
                                  SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-                                 UnitOfTemperature,
-                                 ELECTRIC_POTENTIAL_MILLIVOLT)
+                                 UnitOfTemperature)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -36,7 +35,7 @@ async def async_setup_entry(
         for objectid in coordinator.data.devices[deviceid].objects:
             if (
                 coordinator.data.devices[deviceid].objects[objectid].objectIdentifier[0]
-                == "analogOutput" 
+                == "analogOutput"
             ):
                 # Object Type to ObjectIdentifier[0]
                 entity_list.append(
@@ -60,7 +59,6 @@ async def async_setup_entry(
 class AnalogOutputEntity(
     CoordinatorEntity[EcoPanelDataUpdateCoordinator], NumberEntity
 ):
-
     _attr_has_entity_name = True
 
     def __init__(
@@ -198,7 +196,6 @@ class AnalogOutputEntity(
 
 
 class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], NumberEntity):
-
     _attr_has_entity_name = True
 
     def __init__(
@@ -284,19 +281,19 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
             .units.lower()
         ):
             return UnitOfTemperature.CELSIUS
-        elif(
+        elif (
             "percent"
             in self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .units.lower()
-            ):
+        ):
             return PERCENTAGE
-        elif(
+        elif (
             "millivolt"
             in self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .units.lower()
-            ):
+        ):
             return ELECTRIC_POTENTIAL_MILLIVOLT
         else:
             return None

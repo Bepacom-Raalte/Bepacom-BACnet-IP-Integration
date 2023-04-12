@@ -3,12 +3,20 @@
     "step": {
       "user": {
         "title": "Bepacom BACnet/IP Interface",
-        "description": "Write the hostname or IP of the BACnet/IP add-on",
+        "description": "Write the address to the BACnet/IP add-on.",
         "data": {
-          "entities": "Entities"
-        },
-        "data_description": {
-          "entities": "The entities to add to the group"
+          "host": "IP address"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Write the address to the BACnet/IP add-on.",
+        "data": {
+          "host": "IP address"
         }
       }
     }

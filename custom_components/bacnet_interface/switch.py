@@ -54,7 +54,6 @@ async def async_setup_entry(
 
 
 class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], SwitchEntity):
-
     _attr_has_entity_name = True
 
     def __init__(
@@ -142,7 +141,6 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
 class BinaryOutputEntity(
     CoordinatorEntity[EcoPanelDataUpdateCoordinator], SwitchEntity
 ):
-
     _attr_has_entity_name = True
 
     def __init__(

@@ -6,8 +6,9 @@ from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorEntityDescription,
                                              SensorStateClass)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (TEMP_CELSIUS, PERCENTAGE, IRRADIATION_WATTS_PER_SQUARE_METER,
-                                 UnitOfIrradiance, UnitOfTemperature)
+from homeassistant.const import (IRRADIATION_WATTS_PER_SQUARE_METER,
+                                 PERCENTAGE, TEMP_CELSIUS, UnitOfIrradiance,
+                                 UnitOfTemperature)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -15,7 +16,7 @@ from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.dt import utcnow
 
-from .const import DOMAIN, LOGGER, listOfSpecialUnits, Units
+from .const import DOMAIN, LOGGER, Units, listOfSpecialUnits
 from .coordinator import EcoPanelDataUpdateCoordinator
 
 
@@ -58,7 +59,6 @@ async def async_setup_entry(
 
 
 class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], SensorEntity):
-
     _attr_has_entity_name = True
 
     def __init__(
@@ -122,19 +122,19 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
             .units.lower()
         ):
             return SensorDeviceClass.HUMIDITY
-        elif (self.coordinator.data.devices[self.deviceid]  #TEST THIS PLEASE
+        elif (
+            self.coordinator.data.devices[self.deviceid]  # TEST THIS PLEASE
             .objects[self.objectid]
-            .units in listOfSpecialUnits):
+            .units
+            in listOfSpecialUnits
+        ):
             return SensorDeviceClass.ENUM
         else:
             return None
 
-
-
     @property
     def options(self) -> list:
         return Units
-
 
     @property
     def native_unit_of_measurement(self) -> str:
@@ -192,7 +192,6 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
 class MultiStateInputEntity(
     CoordinatorEntity[EcoPanelDataUpdateCoordinator], SensorEntity
 ):
-
     _attr_has_entity_name = True
 
     def __init__(
