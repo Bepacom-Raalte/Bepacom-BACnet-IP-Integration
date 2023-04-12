@@ -16,7 +16,7 @@ from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.dt import utcnow
 
-from .const import DOMAIN, LOGGER, Units, listOfSpecialUnits
+from .const import DOMAIN, LOGGER
 from .coordinator import EcoPanelDataUpdateCoordinator
 
 
@@ -122,19 +122,9 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
             .units.lower()
         ):
             return SensorDeviceClass.HUMIDITY
-        elif (
-            self.coordinator.data.devices[self.deviceid]  # TEST THIS PLEASE
-            .objects[self.objectid]
-            .units
-            in listOfSpecialUnits
-        ):
-            return SensorDeviceClass.ENUM
         else:
             return None
 
-    @property
-    def options(self) -> list:
-        return Units
 
     @property
     def native_unit_of_measurement(self) -> str:
