@@ -33,7 +33,7 @@ async def async_setup_entry(
     for deviceid in coordinator.data.devices:
         for objectid in coordinator.data.devices[deviceid].objects:
             if (
-                coordinator.data.devices[deviceid].objects[objectid].objectType
+                coordinator.data.devices[deviceid].objects[objectid].objectIdentifier[0]
                 == "binaryInput"
             ):
                 entity_list.append(

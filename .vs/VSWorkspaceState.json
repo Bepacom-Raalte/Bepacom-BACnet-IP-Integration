@@ -4,6 +4,6 @@
     "\\custom_components",
     "\\custom_components\\bacnet_interface"
   ],
-  "SelectedNode": "\\custom_components\\bacnet_interface\\__init__.py",
+  "SelectedNode": "\\custom_components\\bacnet_interface\\binary_sensor.py",
   "PreviewInSolutionExplorer": false
 }
