@@ -218,7 +218,7 @@ class MultiStateInputEntity(
         return (
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .stateText[state_val]
+            .stateText[state_val-1] # JCO
         )
 
     @property

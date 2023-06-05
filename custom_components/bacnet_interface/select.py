@@ -103,7 +103,7 @@ class MultiStateOutputEntity(
             .stateText[
                 self.coordinator.data.devices[self.deviceid]
                 .objects[self.objectid]
-                .presentValue
+                .presentValue-1 #JCO
             ]
         )
 
@@ -139,7 +139,7 @@ class MultiStateOutputEntity(
             presentValue=str(
                 self.coordinator.data.devices[self.deviceid]
                 .objects[self.objectid]
-                .stateText.index(option)
+                .stateText.index(option)+1 #JCO
             ),
         )
 
@@ -195,7 +195,7 @@ class MultiStateValueEntity(
         return (
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .stateText[pres_val - 1]
+            .stateText[pres_val] # jco - 1]
         )
 
     @property
@@ -230,7 +230,7 @@ class MultiStateValueEntity(
             presentValue=str(
                 self.coordinator.data.devices[self.deviceid]
                 .objects[self.objectid]
-                .stateText.index(option)
+                .stateText.index(option) +1 # JCO
                 + 1
             ),
         )
