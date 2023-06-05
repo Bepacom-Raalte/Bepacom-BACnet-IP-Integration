@@ -17,6 +17,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.dt import utcnow
 
 from .const import DOMAIN, LOGGER
+from .const import STATETEXT_OFFSET # JCO
 from .coordinator import EcoPanelDataUpdateCoordinator
 
 
@@ -103,7 +104,7 @@ class MultiStateOutputEntity(
             .stateText[
                 self.coordinator.data.devices[self.deviceid]
                 .objects[self.objectid]
-                .presentValue-1 #JCO
+                .presentValue - STATETEXT_OFFSET #JCO
             ]
         )
 
@@ -139,7 +140,7 @@ class MultiStateOutputEntity(
             presentValue=str(
                 self.coordinator.data.devices[self.deviceid]
                 .objects[self.objectid]
-                .stateText.index(option)+1 #JCO
+                .stateText.index(option) + STATETEXT_OFFSET #JCO
             ),
         )
 
@@ -192,10 +193,12 @@ class MultiStateValueEntity(
             .objects[self.objectid]
             .presentValue
         )
+        if STATETEXT_OFFSET == 0: shift = STATETEXT_OFFSET # JCO
+        else: shift = 0                                    # JCO
         return (
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .stateText[pres_val] # jco - 1]
+            .stateText[pres_val - shift] # JCO
         )
 
     @property
@@ -230,7 +233,7 @@ class MultiStateValueEntity(
             presentValue=str(
                 self.coordinator.data.devices[self.deviceid]
                 .objects[self.objectid]
-                .stateText.index(option) +1 # JCO
+                .stateText.index(option) + STATETEXT_OFFSET # JCO
                 + 1
             ),
         )
