@@ -193,12 +193,10 @@ class MultiStateValueEntity(
             .objects[self.objectid]
             .presentValue
         )
-        if STATETEXT_OFFSET == 0: shift = STATETEXT_OFFSET # JCO
-        else: shift = 0                                    # JCO
         return (
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .stateText[pres_val - shift] # JCO
+            .stateText[pres_val - STATETEXT_OFFSET] # JCO
         )
 
     @property
