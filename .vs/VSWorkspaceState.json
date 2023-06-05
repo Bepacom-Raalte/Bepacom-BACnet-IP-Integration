@@ -1,9 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\custom_components",
-    "\\custom_components\\bacnet_interface"
+    ""
   ],
-  "SelectedNode": "\\custom_components\\bacnet_interface\\binary_sensor.py",
+  "SelectedNode": "\\C:\\Users\\luuk-\\Source\\Repos\\Bepacom-Raalte\\bepacom-custom_components",
   "PreviewInSolutionExplorer": false
 }
