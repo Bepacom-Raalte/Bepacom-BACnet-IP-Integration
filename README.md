@@ -1,4 +1,4 @@
-# Forked from Bepacom Custom Integration Repository  - slightly modified for Intesis/Toshiba airco interface
+Bepacom Custom Integration Repository
 
 
 
