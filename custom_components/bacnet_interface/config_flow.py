@@ -18,7 +18,7 @@ from .const import DOMAIN, LOGGER  # pylint:disable=unused-import
 _LOGGER = LOGGER
 
 
-class ConfigFlow(ConfigFlow, domain=DOMAIN):
+class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for the EcoPanel."""
 
     VERSION = 1
@@ -46,12 +46,16 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
 
         # Get functional IP address for the user...
         for adapter in adapters:
+            if adapter is None:
+                ip_addr = "127.0.0.1" 
+                break
             for ip_info in adapter["ipv4"]:
                 try:
                     devicedict = await self._async_get_device(ip_info["address"])
-                    ip_addr = ip_info["address"]
+                    ip_addr = ip_info.get("address")
                     break
                 except:
+                    ip_addr = "127.0.0.1" 
                     continue
 
         if user_input is not None:
@@ -82,7 +86,7 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
             )
 
     async def _async_get_device(self, host: str) -> DeviceDict:
-        """Get device information from WLED device."""
+        """Get device information from add-on."""
         session = async_get_clientsession(self.hass)
         interface = Interface(host, session=session)
         return await interface.update()
