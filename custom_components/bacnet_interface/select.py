@@ -232,6 +232,5 @@ class MultiStateValueEntity(
                 self.coordinator.data.devices[self.deviceid]
                 .objects[self.objectid]
                 .stateText.index(option) + STATETEXT_OFFSET # JCO
-                + 1
             ),
         )
