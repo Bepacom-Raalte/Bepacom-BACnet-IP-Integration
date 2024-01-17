@@ -21,7 +21,17 @@ First install the Bepacom BACnet/IP add-on from here:
 
 ## [BACnet/IP-addon](https://github.com/Bepacom-Raalte/bepacom-HA-Addons/tree/main/bacnetinterface)
 
-Copy this integration to your Home Assistant's 'custom_components' folder.
+Copy this integration to your Home Assistant's 'custom_components' folder located in /config/.
+
+If you don't know where this is located, small explanation here. Through the 'Samba share' add-on, you can make this folder available on your network.
+
+To add this on Windows, go to This PC, right click and select add networklocation, and then follow the wizard. 
+
+Your home assistant address should be something like \\homeassistant.local\config.
+
+When you got this done, create the 'custom_components' folder and paste the bacnet_interface integration folder there.
+
+Restart Home Assistant after installing this integration for it to be able to use it.
 
 Then, manually add this integration through Settings > Devices & Services > + Add Integration and search for "BACnet".
 
