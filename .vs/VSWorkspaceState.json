@@ -4,6 +4,6 @@
     "\\custom_components",
     "\\custom_components\\bacnet_interface"
   ],
-  "SelectedNode": "\\custom_components\\bacnet_interface\\sensor.py",
+  "SelectedNode": "\\custom_components\\bacnet_interface\\config_flow.py",
   "PreviewInSolutionExplorer": false
 }
