@@ -18,6 +18,7 @@ PLATFORMS: list[str] = [
     "select",
 ]
 
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up EcoPanel BACnet/IP interface from a config entry."""
 
@@ -61,7 +62,9 @@ async def async_remove_config_entry_device(
     hass: HomeAssistant, config_entry: ConfigEntry, device_entry: DeviceEntry
 ) -> bool:
     """Remove config entry from a device."""
-    coordinator: EcoPanelDataUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    coordinator: EcoPanelDataUpdateCoordinator = hass.data[DOMAIN][
+        config_entry.entry_id
+    ]
 
     for domain, device_id in device_entry.identifiers:
         coordinator.logger.error(coordinator.data.devices[device_id])

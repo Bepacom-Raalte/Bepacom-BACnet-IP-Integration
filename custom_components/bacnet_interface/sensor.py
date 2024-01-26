@@ -16,8 +16,8 @@ from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.dt import utcnow
 
+from .const import STATETEXT_OFFSET  # JCO
 from .const import DOMAIN, LOGGER
-from .const import STATETEXT_OFFSET #JCO
 from .coordinator import EcoPanelDataUpdateCoordinator
 
 
@@ -126,7 +126,6 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
         else:
             return None
 
-
     @property
     def native_unit_of_measurement(self) -> str:
         if (
@@ -219,7 +218,7 @@ class MultiStateInputEntity(
         return (
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .stateText[state_val - STATETEXT_OFFSET] # JCO
+            .stateText[state_val - STATETEXT_OFFSET]  # JCO
         )
 
     @property

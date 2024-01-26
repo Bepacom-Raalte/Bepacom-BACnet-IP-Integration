@@ -29,7 +29,9 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
         """Initialize EcoPanel data updater"""
 
         self.interface = Interface(
-            host=entry.data[CONF_HOST], port=entry.data[CONF_PORT], session=async_get_clientsession(hass)
+            host=entry.data[CONF_HOST],
+            port=entry.data[CONF_PORT],
+            session=async_get_clientsession(hass),
         )
         self.unsub: CALLBACK_TYPE | None = None
 

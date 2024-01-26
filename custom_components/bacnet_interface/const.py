@@ -9,4 +9,4 @@ DOMAIN = "bacnet_interface"
 LOGGER = logging.getLogger(__package__)
 SCAN_INTERVAL = timedelta(seconds=60)
 
-STATETEXT_OFFSET = 1 # JCO
+STATETEXT_OFFSET = 1  # JCO
