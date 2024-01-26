@@ -16,7 +16,8 @@
     },
     "error": {
       "already_configured": "[%key:common::config_flow::abort::already_configured_service%]",
-      "cannot_connect":  "Can't connect to the add-on."
+      "cannot_connect": "Can't connect to the add-on.",
+      "empty_response": "Empty response from the add-on. Is the add-on on the right network?"
     },
     "abort": {
       "single_instance_allowed": "Only one instance of this integration is allowed!"

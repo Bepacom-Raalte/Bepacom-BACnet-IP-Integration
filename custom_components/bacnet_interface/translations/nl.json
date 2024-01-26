@@ -16,7 +16,8 @@
     },
     "error": {
       "already_configured": "[%key:common::config_flow::abort::already_configured_service%]",
-      "cannot_connect": "Kan niet verbinden met de add-on."
+      "cannot_connect": "Kan niet verbinden met de add-on.",
+      "empty_response": "Lege reactie van de add-on. Zit de add-on op het juiste netwerk?"
     },
     "abort": {
       "single_instance_allowed": "Er is maar één instantie van deze integration nodig!"
