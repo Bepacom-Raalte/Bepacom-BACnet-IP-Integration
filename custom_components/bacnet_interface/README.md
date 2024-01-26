@@ -35,7 +35,11 @@ Restart Home Assistant after installing this integration.
 
 Then, manually add this integration through Settings > Devices & Services > + Add Integration and search for "BACnet".
 
-When the integration opens, you'll have to type an IP address. Use 127.0.0.1, or any other IP address you know the BACnet add-on is running on.
+When the integration opens, you'll have to type an IP address and a port. 
+
+Use 127.0.0.1 as IP for the least trouble. It's possible to use the hostname for the add-on as IP, i.e. 97683af0-bacnetinterface.
+
+The port can be whichever port you set in the add-on, or if you don't want to open a port for it, 8099.
 
 After this is done, congratulations! Your Bepacom EcoPanel BACnet Interface integration is installed!
 

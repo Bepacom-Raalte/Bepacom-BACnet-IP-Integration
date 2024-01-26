@@ -3,14 +3,20 @@
     "step": {
       "user": {
         "title": "Bepacom BACnet/IP Interface",
-        "description": "Voer het IP adres van het BACnet/IP add-on in.",
+        "description": "Voer het IP adres en de poort van de BACnet/IP add-on in.",
         "data": {
-          "host": "IP-adres"
+          "host": "IP-adres",
+          "port": "Poort"
         }
+      },
+      "hassio_confirm": {
+        "title": "Bepacom BACnet/IP Interface via Home Assistant add-on",
+        "description": "Wil je Home Assistant configureren om te verbinden met Bepacom BACnet/IP Interface door middel van: {addon}?"
       }
     },
     "error": {
-      "already_configured": "[%key:common::config_flow::abort::already_configured_service%]"
+      "already_configured": "[%key:common::config_flow::abort::already_configured_service%]",
+      "cannot_connect": "Kan niet verbinden met de add-on."
     },
     "abort": {
       "single_instance_allowed": "Er is maar één instantie van deze integration nodig!"
@@ -20,9 +26,10 @@
     "step": {
       "init": {
         "title": "Bepacom BACnet/IP Interface",
-        "description": "Voer het IP adres van het BACnet/IP add-on in.",
+        "description": "Voer het IP adres en de poort van de BACnet/IP add-on in.",
         "data": {
-          "host": "IP-adres"
+          "host": "IP-adres",
+          "port": "Poort"
         }
       }
     }

@@ -3,14 +3,20 @@
     "step": {
       "user": {
         "title": "Bepacom BACnet/IP Interface",
-        "description": "Specify the BACnet/IP add-on IP-address.",
+        "description": "Specify the BACnet/IP add-on IP-address and port.",
         "data": {
-          "host": "IP address"
+          "host": "IP address",
+          "port": "Port"
         }
+      },
+      "hassio_confirm": {
+        "title": "Bepacom BACnet/IP Interface via Home Assistant add-on",
+        "description": "Do you want to configure Home Assistant to connect to the Bepacom BACnet/IP Interface provided by the add-on: {addon}?"
       }
     },
     "error": {
-      "already_configured": "[%key:common::config_flow::abort::already_configured_service%]"
+      "already_configured": "[%key:common::config_flow::abort::already_configured_service%]",
+      "cannot_connect":  "Can't connect to the add-on."
     },
     "abort": {
       "single_instance_allowed": "Only one instance of this integration is allowed!"
@@ -20,9 +26,10 @@
     "step": {
       "init": {
         "title": "Bepacom BACnet/IP Interface",
-        "description": "Specify the BACnet/IP add-on IP-address.",
+        "description": "Specify the BACnet/IP add-on IP-address and port.",
         "data": {
-          "host": "IP address"
+          "host": "IP address",
+          "port": "Port"
         }
       }
     }

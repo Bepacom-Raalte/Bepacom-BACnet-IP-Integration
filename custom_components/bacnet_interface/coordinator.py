@@ -7,7 +7,7 @@ from datetime import timedelta
 from aioecopanel import (DeviceDict, EcoPanelConnectionClosed, EcoPanelError,
                          Interface)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, EVENT_HOMEASSISTANT_STOP
+from homeassistant.const import CONF_HOST, CONF_PORT, EVENT_HOMEASSISTANT_STOP
 from homeassistant.core import CALLBACK_TYPE, Event, HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import (DataUpdateCoordinator,
@@ -29,7 +29,7 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
         """Initialize EcoPanel data updater"""
 
         self.interface = Interface(
-            entry.data[CONF_HOST], session=async_get_clientsession(hass)
+            host=entry.data[CONF_HOST], port=entry.data[CONF_PORT], session=async_get_clientsession(hass)
         )
         self.unsub: CALLBACK_TYPE | None = None
 
