@@ -4,7 +4,8 @@ from __future__ import annotations
 from typing import Any
 
 import voluptuous as vol
-from aioecopanel import DeviceDict, EcoPanelConnectionError, Interface
+from aioecopanel import (DeviceDict, EcoPanelConnectionError,
+                         EcoPanelEmptyResponseError, Interface)
 from homeassistant.components import dhcp, network, onboarding, zeroconf
 from homeassistant.components.hassio import HassioServiceInfo
 from homeassistant.config_entries import (CONN_CLASS_LOCAL_PUSH, ConfigEntry,
@@ -53,7 +54,9 @@ class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
                 break
             for ip_info in adapter["ipv4"]:
                 try:
-                    devicedict = await self._async_get_device(ip_info["address"])
+                    devicedict = await self._async_get_device(
+                        host=ip_info["address"], port=8099
+                    )
                     ip_addr = ip_info.get("address")
                     break
                 except:
@@ -62,9 +65,13 @@ class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             try:
-                devicedict = await self._async_get_device(user_input[CONF_HOST])
+                devicedict = await self._async_get_device(
+                    host=user_input[CONF_HOST], port=user_input[CONF_PORT]
+                )
             except EcoPanelConnectionError:
                 errors["base"] = "cannot_connect"
+            except EcoPanelEmptyResponseError:
+                errors["base"] = "empty_response"
             else:
                 return self.async_create_entry(
                     title="BACnet Interface",
@@ -75,40 +82,36 @@ class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
                         CONF_NAME: user_input[CONF_NAME],
                     },
                 )
-        else:
-            user_input = {}
 
-            return self.async_show_form(
-                step_id="user",
-                data_schema=vol.Schema(
-                    {
-                        vol.Required(
-                            CONF_HOST, description={"suggested_value": ip_addr}
-                        ): str,
-                        vol.Required(
-                            CONF_PORT, description={"suggested_value": 8099}
-                        ): int,
-                        vol.Required(
-                            CONF_ENABLED, description={"suggested_value": True}
-                        ): bool,
-                        vol.Required(CONF_NAME, default="object_name"): selector(
-                            {
-                                "select": {
-                                    "options": NAME_OPTIONS,
-                                    "multiple": False,
-                                    "translation_key": "name_select",
-                                }
+        return self.async_show_form(
+            step_id="user",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_HOST, description={"suggested_value": ip_addr}
+                    ): str,
+                    vol.Required(CONF_PORT, description={"suggested_value": 8099}): int,
+                    vol.Required(
+                        CONF_ENABLED, description={"suggested_value": True}
+                    ): bool,
+                    vol.Required(CONF_NAME, default="object_name"): selector(
+                        {
+                            "select": {
+                                "options": NAME_OPTIONS,
+                                "multiple": False,
+                                "translation_key": "name_select",
                             }
-                        ),
-                    }
-                ),
-                errors=errors or {},
-            )
+                        }
+                    ),
+                }
+            ),
+            errors=errors,
+        )
 
-    async def _async_get_device(self, host: str) -> DeviceDict:
+    async def _async_get_device(self, host: str, port: int) -> DeviceDict:
         """Get device information from add-on."""
         session = async_get_clientsession(self.hass)
-        interface = Interface(host, session=session)
+        interface = Interface(host=host, port=port, session=session)
         return await interface.update()
 
 
