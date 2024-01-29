@@ -6,7 +6,9 @@
         "description": "Voer het IP adres en de poort van de BACnet/IP add-on in.",
         "data": {
           "host": "IP-adres",
-          "port": "Poort"
+          "port": "Poort",
+          "enabled": "Entity standaard ingeschakeld",
+          "name": "Entity naam gebaseerd op:"
         }
       },
       "hassio_confirm": {
@@ -29,8 +31,18 @@
         "description": "Voer het IP adres en de poort van de BACnet/IP add-on in.",
         "data": {
           "host": "IP-adres",
-          "port": "Poort"
+          "port": "Poort",
+          "enabled": "Entity standaard ingeschakeld",
+          "name": "Entity naam gebaseerd op:"
         }
+      }
+    }
+  },
+  "selector": {
+    "name_select": {
+      "options": {
+        "object_name": "Object naam",
+        "description": "'Description' BACnet eigenschap"
       }
     }
   }

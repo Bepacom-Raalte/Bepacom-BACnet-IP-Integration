@@ -6,7 +6,8 @@ from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorEntityDescription,
                                              SensorStateClass)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (IRRADIATION_WATTS_PER_SQUARE_METER,
+from homeassistant.const import (CONF_ENABLED, CONF_NAME,
+                                 IRRADIATION_WATTS_PER_SQUARE_METER,
                                  PERCENTAGE, TEMP_CELSIUS, UnitOfIrradiance,
                                  UnitOfTemperature)
 from homeassistant.core import HomeAssistant
@@ -16,8 +17,8 @@ from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.dt import utcnow
 
+from .const import STATETEXT_OFFSET  # JCO
 from .const import DOMAIN, LOGGER
-from .const import STATETEXT_OFFSET #JCO
 from .coordinator import EcoPanelDataUpdateCoordinator
 
 
@@ -79,12 +80,16 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
 
     @property
     def name(self) -> str:
-        return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
+        name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
+        if name == "description":
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
+        else:
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
 
     @property
     def entity_registry_enabled_default(self) -> bool:
         """Return if the entity should be enabled when first added to the entity registry."""
-        return False
+        return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
 
     @property
     def native_value(self):
@@ -125,7 +130,6 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
             return SensorDeviceClass.HUMIDITY
         else:
             return None
-
 
     @property
     def native_unit_of_measurement(self) -> str:
@@ -191,7 +195,7 @@ class MultiStateInputEntity(
         deviceid: str,
         objectid: str,
     ):
-        """Initialize a BACnet AnalogInput object as entity."""
+        """Initialize a BACnet MultiStateInput object as entity."""
         super().__init__(coordinator=coordinator)
         self.deviceid = deviceid
         self.objectid = objectid
@@ -202,12 +206,16 @@ class MultiStateInputEntity(
 
     @property
     def name(self) -> str:
-        return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
+        name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
+        if name == "description":
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
+        else:
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
 
     @property
     def entity_registry_enabled_default(self) -> bool:
         """Return if the entity should be enabled when first added to the entity registry."""
-        return False
+        return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
 
     @property
     def native_value(self):
@@ -219,7 +227,7 @@ class MultiStateInputEntity(
         return (
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .stateText[state_val - STATETEXT_OFFSET] # JCO
+            .stateText[state_val - STATETEXT_OFFSET]  # JCO
         )
 
     @property

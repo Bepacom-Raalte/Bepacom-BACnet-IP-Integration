@@ -6,7 +6,9 @@
         "description": "Specify the BACnet/IP add-on IP-address and port.",
         "data": {
           "host": "IP address",
-          "port": "Port"
+          "port": "Port",
+          "enabled": "Entity enabled by default",
+          "name": "Entity name based on:"
         }
       },
       "hassio_confirm": {
@@ -16,7 +18,7 @@
     },
     "error": {
       "already_configured": "[%key:common::config_flow::abort::already_configured_service%]",
-      "cannot_connect":  "Can't connect to the add-on."
+      "cannot_connect": "Can't connect to the add-on."
     },
     "abort": {
       "single_instance_allowed": "Only one instance of this integration is allowed!"
@@ -29,8 +31,18 @@
         "description": "Specify the BACnet/IP add-on IP-address and port.",
         "data": {
           "host": "IP address",
-          "port": "Port"
+          "port": "Port",
+          "enabled": "Entity enabled by default",
+          "name": "Entity name based on:"
         }
+      }
+    }
+  },
+  "selector": {
+    "name_select": {
+      "options": {
+        "object_name": "Object name",
+        "description": "Description BACnet property"
       }
     }
   }

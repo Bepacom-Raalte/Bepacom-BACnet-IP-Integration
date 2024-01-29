@@ -5,8 +5,8 @@ from typing import Any
 from homeassistant.components.switch import (SwitchDeviceClass, SwitchEntity,
                                              SwitchEntityDescription)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (DATA_BYTES, ELECTRIC_CURRENT_MILLIAMPERE,
-                                 PERCENTAGE,
+from homeassistant.const import (CONF_ENABLED, CONF_NAME, DATA_BYTES,
+                                 ELECTRIC_CURRENT_MILLIAMPERE, PERCENTAGE,
                                  SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
                                  UnitOfTemperature)
 from homeassistant.core import HomeAssistant
@@ -62,7 +62,7 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
         deviceid: str,
         objectid: str,
     ):
-        """Initialize a BACnet AnalogInput object as entity."""
+        """Initialize a BACnet BinaryValue object as entity."""
         super().__init__(coordinator=coordinator)
         self.deviceid = deviceid
         self.objectid = objectid
@@ -73,12 +73,16 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
 
     @property
     def name(self) -> str:
-        return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
+        name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
+        if name == "description":
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
+        else:
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
 
     @property
     def entity_registry_enabled_default(self) -> bool:
         """Return if the entity should be enabled when first added to the entity registry."""
-        return False
+        return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
 
     @property
     def is_on(self) -> bool:
@@ -149,7 +153,7 @@ class BinaryOutputEntity(
         deviceid: str,
         objectid: str,
     ):
-        """Initialize a BACnet AnalogInput object as entity."""
+        """Initialize a BACnet BinaryOutput object as entity."""
         super().__init__(coordinator=coordinator)
         self.deviceid = deviceid
         self.objectid = objectid
@@ -160,12 +164,16 @@ class BinaryOutputEntity(
 
     @property
     def name(self) -> str:
-        return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
+        name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
+        if name == "description":
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
+        else:
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
 
     @property
     def entity_registry_enabled_default(self) -> bool:
         """Return if the entity should be enabled when first added to the entity registry."""
-        return False
+        return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
 
     @property
     def is_on(self) -> bool:

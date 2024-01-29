@@ -5,6 +5,6 @@
     "\\custom_components\\bacnet_interface",
     "\\custom_components\\bacnet_interface\\translations"
   ],
-  "SelectedNode": "\\custom_components\\bacnet_interface\\README.md",
+  "SelectedNode": "\\custom_components\\bacnet_interface\\translations\\en.json",
   "PreviewInSolutionExplorer": false
 }

@@ -6,7 +6,8 @@ from typing import Any
 from homeassistant.components.number import (NumberDeviceClass, NumberEntity,
                                              NumberEntityDescription)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (DATA_BYTES, ELECTRIC_CURRENT_MILLIAMPERE,
+from homeassistant.const import (CONF_ENABLED, CONF_NAME, DATA_BYTES,
+                                 ELECTRIC_CURRENT_MILLIAMPERE,
                                  ELECTRIC_POTENTIAL_MILLIVOLT, PERCENTAGE,
                                  SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
                                  UnitOfTemperature)
@@ -67,7 +68,7 @@ class AnalogOutputEntity(
         deviceid: str,
         objectid: str,
     ):
-        """Initialize a BACnet AnalogInput object as entity."""
+        """Initialize a BACnet AnalogOutput object as entity."""
         super().__init__(coordinator=coordinator)
         self.deviceid = deviceid
         self.objectid = objectid
@@ -78,7 +79,11 @@ class AnalogOutputEntity(
 
     @property
     def name(self) -> str:
-        return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
+        name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
+        if name == "description":
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
+        else:
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
 
     @property
     def icon(self):
@@ -87,7 +92,7 @@ class AnalogOutputEntity(
     @property
     def entity_registry_enabled_default(self) -> bool:
         """Return if the entity should be enabled when first added to the entity registry."""
-        return False
+        return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
 
     @property
     def mode(self) -> str:
@@ -204,7 +209,7 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
         deviceid: str,
         objectid: str,
     ):
-        """Initialize a BACnet AnalogInput object as entity."""
+        """Initialize a BACnet AnalogValue object as entity."""
         super().__init__(coordinator=coordinator)
         self.deviceid = deviceid
         self.objectid = objectid
@@ -215,7 +220,11 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
 
     @property
     def name(self) -> str:
-        return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
+        name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
+        if name == "description":
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
+        else:
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
 
     @property
     def icon(self):
@@ -224,7 +233,7 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
     @property
     def entity_registry_enabled_default(self) -> bool:
         """Return if the entity should be enabled when first added to the entity registry."""
-        return False
+        return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
 
     @property
     def mode(self) -> str:

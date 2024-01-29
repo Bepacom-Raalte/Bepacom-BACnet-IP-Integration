@@ -5,8 +5,8 @@ from typing import Any
 from homeassistant.components.select import (SelectEntity,
                                              SelectEntityDescription)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (DATA_BYTES, ELECTRIC_CURRENT_MILLIAMPERE,
-                                 PERCENTAGE,
+from homeassistant.const import (CONF_ENABLED, CONF_NAME, DATA_BYTES,
+                                 ELECTRIC_CURRENT_MILLIAMPERE, PERCENTAGE,
                                  SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
                                  UnitOfTemperature)
 from homeassistant.core import HomeAssistant
@@ -16,8 +16,8 @@ from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.dt import utcnow
 
+from .const import STATETEXT_OFFSET  # JCO
 from .const import DOMAIN, LOGGER
-from .const import STATETEXT_OFFSET # JCO
 from .coordinator import EcoPanelDataUpdateCoordinator
 
 
@@ -66,7 +66,7 @@ class MultiStateOutputEntity(
         deviceid: str,
         objectid: str,
     ):
-        """Initialize a BACnet AnalogInput object as entity."""
+        """Initialize a BACnet MultiStateOutput object as entity."""
         super().__init__(coordinator=coordinator)
         self.deviceid = deviceid
         self.objectid = objectid
@@ -78,11 +78,15 @@ class MultiStateOutputEntity(
     @property
     def entity_registry_enabled_default(self) -> bool:
         """Return if the entity should be enabled when first added to the entity registry."""
-        return False
+        return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
 
     @property
     def name(self) -> str:
-        return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
+        name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
+        if name == "description":
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
+        else:
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
 
     @property
     def icon(self):
@@ -104,7 +108,8 @@ class MultiStateOutputEntity(
             .stateText[
                 self.coordinator.data.devices[self.deviceid]
                 .objects[self.objectid]
-                .presentValue - STATETEXT_OFFSET #JCO
+                .presentValue
+                - STATETEXT_OFFSET  # JCO
             ]
         )
 
@@ -140,7 +145,8 @@ class MultiStateOutputEntity(
             presentValue=str(
                 self.coordinator.data.devices[self.deviceid]
                 .objects[self.objectid]
-                .stateText.index(option) + STATETEXT_OFFSET #JCO
+                .stateText.index(option)
+                + STATETEXT_OFFSET  # JCO
             ),
         )
 
@@ -156,7 +162,7 @@ class MultiStateValueEntity(
         deviceid: str,
         objectid: str,
     ):
-        """Initialize a BACnet AnalogInput object as entity."""
+        """Initialize a BACnet MultiStateValue object as entity."""
         super().__init__(coordinator=coordinator)
         self.deviceid = deviceid
         self.objectid = objectid
@@ -168,11 +174,15 @@ class MultiStateValueEntity(
     @property
     def entity_registry_enabled_default(self) -> bool:
         """Return if the entity should be enabled when first added to the entity registry."""
-        return False
+        return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
 
     @property
     def name(self) -> str:
-        return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
+        name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
+        if name == "description":
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
+        else:
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
 
     @property
     def icon(self):
@@ -196,7 +206,7 @@ class MultiStateValueEntity(
         return (
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .stateText[pres_val - STATETEXT_OFFSET] # JCO
+            .stateText[pres_val - STATETEXT_OFFSET]  # JCO
         )
 
     @property
@@ -231,6 +241,7 @@ class MultiStateValueEntity(
             presentValue=str(
                 self.coordinator.data.devices[self.deviceid]
                 .objects[self.objectid]
-                .stateText.index(option) + STATETEXT_OFFSET # JCO
+                .stateText.index(option)
+                + STATETEXT_OFFSET  # JCO
             ),
         )
