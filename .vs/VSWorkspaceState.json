@@ -1,10 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\custom_components",
-    "\\custom_components\\bacnet_interface",
-    "\\custom_components\\bacnet_interface\\translations"
+    "\\custom_components"
   ],
-  "SelectedNode": "\\custom_components\\bacnet_interface\\translations\\en.json",
+  "SelectedNode": "\\custom_components\\bacnet_interface",
   "PreviewInSolutionExplorer": false
 }

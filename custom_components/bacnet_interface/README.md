@@ -64,10 +64,8 @@ Option "Object name" will set the name to the object name property of the BACnet
 Option "Description" will set the name to the description property of the BACnet object.
 
 
-# Errors
+## Errors
 
 If there is an error, be sure to check your supervisor logs.
-
 Make sure the add-on is running. If there was a problem with the add-on, reload the integration after solving the issue.
-
 If you think there's a bug or can't figure it out, feel free to contact the developers on [GitHub!](https://github.com/Bepacom-Raalte/bepacom-custom_components)

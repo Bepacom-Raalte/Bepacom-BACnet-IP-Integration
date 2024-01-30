@@ -5,10 +5,7 @@ from typing import Any
 from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass, BinarySensorEntity, BinarySensorEntityDescription)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (CONF_ENABLED, CONF_NAME, DATA_BYTES,
-                                 ELECTRIC_CURRENT_MILLIAMPERE, PERCENTAGE,
-                                 SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-                                 UnitOfTemperature)
+from homeassistant.const import CONF_ENABLED, CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback

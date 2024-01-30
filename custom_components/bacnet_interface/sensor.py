@@ -6,10 +6,10 @@ from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorEntityDescription,
                                              SensorStateClass)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (CONF_ENABLED, CONF_NAME,
-                                 IRRADIATION_WATTS_PER_SQUARE_METER,
-                                 PERCENTAGE, TEMP_CELSIUS, UnitOfIrradiance,
-                                 UnitOfTemperature)
+from homeassistant.const import (CONF_ENABLED, CONF_NAME, PERCENTAGE,
+                                 UnitOfElectricCurrent,
+                                 UnitOfElectricPotential, UnitOfInformation,
+                                 UnitOfIrradiance, UnitOfTemperature)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -140,9 +140,9 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
             .objects[self.objectid]
             .units.lower()
         ):
-            return TEMP_CELSIUS
+            return UnitOfTemperature.CELSIUS
         elif self.device_class == SensorDeviceClass.IRRADIANCE:
-            return IRRADIATION_WATTS_PER_SQUARE_METER
+            return UnitOfIrradiance.WATTS_PER_SQUARE_METER
         elif (
             self.device_class == SensorDeviceClass.HUMIDITY
             or "percent"

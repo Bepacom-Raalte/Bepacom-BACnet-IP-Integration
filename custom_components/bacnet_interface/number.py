@@ -6,11 +6,10 @@ from typing import Any
 from homeassistant.components.number import (NumberDeviceClass, NumberEntity,
                                              NumberEntityDescription)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (CONF_ENABLED, CONF_NAME, DATA_BYTES,
-                                 ELECTRIC_CURRENT_MILLIAMPERE,
-                                 ELECTRIC_POTENTIAL_MILLIVOLT, PERCENTAGE,
-                                 SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-                                 UnitOfTemperature)
+from homeassistant.const import (CONF_ENABLED, CONF_NAME, PERCENTAGE,
+                                 UnitOfElectricCurrent,
+                                 UnitOfElectricPotential, UnitOfInformation,
+                                 UnitOfIrradiance, UnitOfTemperature)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -303,7 +302,7 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
             .objects[self.objectid]
             .units.lower()
         ):
-            return ELECTRIC_POTENTIAL_MILLIVOLT
+            return UnitOfElectricPotential.MILLIVOLT
         else:
             return None
 
