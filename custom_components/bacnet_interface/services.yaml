@@ -1,0 +1,17 @@
+write_release:
+  fields:
+    priority:
+      default: 15
+      selector:
+        number:
+          min: 0
+          max: 16
+          mode: box
+    entity_id:
+      selector:
+        entity:
+          integration: bacnet_interface
+          domain:
+            - number
+            - select
+            - switch

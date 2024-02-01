@@ -46,5 +46,21 @@
         "description": "Description BACnet property"
       }
     }
+  },
+  "services": {
+    "write_release": {
+      "name": "Send Release",
+      "description": "Send an empty presentValue to an entity object to release manual control.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity",
+          "description": "Name of entity that represents the object to write to."
+        },
+        "priority": {
+          "name": "Priority",
+          "description": "The BACnet priority the empty write request has to be written with."
+        }
+      }
+    }
   }
 }

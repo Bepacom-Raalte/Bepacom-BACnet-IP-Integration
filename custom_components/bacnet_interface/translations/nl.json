@@ -46,5 +46,21 @@
         "description": "'Description' BACnet eigenschap"
       }
     }
+  },
+  "services": {
+    "write_release": {
+      "name": "Stuur Vrijgave",
+      "description": "Stuur een lege presentValue naar een object om handmatige besturing vrij te geven.",
+      "fields": {
+        "entity_id": {
+          "name": "Entiteit",
+          "description": "Naam van een entiteit dat het BACnet object representateert."
+        },
+        "priority": {
+          "name": "Prioriteit",
+          "description": "De BACnet prioriteit waarmee geschreven moet worden."
+        }
+      }
+    }
   }
 }

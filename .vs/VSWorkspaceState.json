@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\custom_components"
+    "\\custom_components",
+    "\\custom_components\\bacnet_interface"
   ],
-  "SelectedNode": "\\custom_components\\bacnet_interface",
+  "SelectedNode": "\\custom_components\\bacnet_interface\\coordinator.py",
   "PreviewInSolutionExplorer": false
 }
