@@ -1,13 +1,13 @@
 {
   "domain": "bacnet_interface",
   "name": "Bepacom BACnet/IP Interface",
+  "codeowners": [ "@Bepacom-Raalte", "@GravySeal" ],
   "config_flow": true,
-  "documentation": "https://github.com/Bepacom-Raalte/bepacom-custom_components/tree/main/custom_components/bacnet_interface",
-  "requirements": [ "aioecopanel==0.0.5" ],
   "dependencies": [],
-  "codeowners": [ "@GravySeal", "@Bepacom-Raalte" ],
-  "iot_class": "local_push",
+  "documentation": "https://github.com/Bepacom-Raalte/bepacom-custom_components/tree/main/custom_components/bacnet_interface",
   "integration_type": "hub",
-  "version": "0.1.2",
-  "issue_tracker": "https://github.com/Bepacom-Raalte/bepacom-custom_components/issues"
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/Bepacom-Raalte/bepacom-custom_components/issues",
+  "requirements": [ "aioecopanel==0.0.5" ],
+  "version": "0.1.2"
 }
