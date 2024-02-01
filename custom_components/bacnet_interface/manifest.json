@@ -3,10 +3,11 @@
   "name": "Bepacom BACnet/IP Interface",
   "config_flow": true,
   "documentation": "https://github.com/Bepacom-Raalte/bepacom-custom_components/tree/main/custom_components/bacnet_interface",
-  "requirements": ["aioecopanel==0.0.5"],
+  "requirements": [ "aioecopanel==0.0.5" ],
   "dependencies": [],
   "codeowners": [ "@GravySeal", "@Bepacom-Raalte" ],
   "iot_class": "local_push",
   "integration_type": "hub",
-  "version": "0.1.2"
+  "version": "0.1.2",
+  "issue_tracker": "https://github.com/Bepacom-Raalte/bepacom-custom_components/issues"
 }
