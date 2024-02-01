@@ -44,24 +44,6 @@ class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
         if self.hass.data.get(DOMAIN):
             return self.async_abort(reason="single_instance_allowed")
 
-        adapters = await network.async_get_adapters(self.hass)
-
-        # Get functional IP address for the user...
-        for adapter in adapters:
-            if adapter is None:
-                ip_addr = "127.0.0.1"
-                break
-            for ip_info in adapter["ipv4"]:
-                try:
-                    devicedict = await self._async_get_device(
-                        host=ip_info["address"], port=8099
-                    )
-                    ip_addr = ip_info.get("address")
-                    break
-                except:
-                    ip_addr = "127.0.0.1"
-                    continue
-
         if user_input is not None:
             try:
                 devicedict = await self._async_get_device(
@@ -87,7 +69,7 @@ class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(
-                        CONF_HOST, description={"suggested_value": ip_addr}
+                        CONF_HOST, description={"suggested_value": "127.0.0.1"}
                     ): str,
                     vol.Required(CONF_PORT, description={"suggested_value": 8099}): int,
                     vol.Required(
