@@ -63,7 +63,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         device_id, object_id = entity_data.unique_id.split("_")
 
         if call.data.get(ATTR_PRIORITY):
-            LOGGER.warning("Priority is currently not functioning. Writing default value.")
+            LOGGER.warning(
+                "Priority is currently not functioning. Writing default value."
+            )
 
         await coordinator.interface.write_property(
             deviceid=device_id, objectid=object_id

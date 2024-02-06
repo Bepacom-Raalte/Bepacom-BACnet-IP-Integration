@@ -88,6 +88,10 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
             .objects[self.objectid]
             .presentValue
             == "active"
+            or self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
+            == 1
         ):
             return True
         elif (
@@ -95,6 +99,10 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
             .objects[self.objectid]
             .presentValue
             == "inactive"
+            or self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
+            == 0
         ):
             return False
 
@@ -179,6 +187,10 @@ class BinaryOutputEntity(
             .objects[self.objectid]
             .presentValue
             == "active"
+            or self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
+            == 1
         ):
             return True
         elif (
@@ -186,6 +198,10 @@ class BinaryOutputEntity(
             .objects[self.objectid]
             .presentValue
             == "inactive"
+            or self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
+            == 0
         ):
             return False
 
