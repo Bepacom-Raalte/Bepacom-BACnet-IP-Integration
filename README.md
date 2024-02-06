@@ -1,5 +1,7 @@
 # Bepacom EcoPanel BACnet Interface
 
+<img src="https://raw.githubusercontent.com/Bepacom-Raalte/Bepacom-BACnet-IP-Integration/main/images/logo.png" height=400/>
+
 This integration is intended to display the data from the Bepacom EcoPanel BACnet Interface add-on on the Lovelace UI of Home Assistant.
 
 It currently supports these BACnet object types:
@@ -17,7 +19,7 @@ It currently supports these BACnet object types:
 <img src="https://raw.githubusercontent.com/Bepacom-Raalte/Bepacom-BACnet-IP-Integration/main/images/integrationadded.png"/>
 
 
-## HACS
+# HACS
 
 This repository can be added to your HACS instance!
 
