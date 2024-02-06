@@ -14,6 +14,8 @@ It currently supports these BACnet object types:
 - Multi State Output
 - Multi State Value
 
+<img src="https://raw.githubusercontent.com/Bepacom-Raalte/Bepacom-BACnet-IP-Integration/main/images/integrationadded.png"/>
+
 
 ## HACS
 
@@ -28,9 +30,13 @@ Firstly, install the Bepacom BACnet/IP add-on from here:
 
 [BACnet/IP-addon](https://github.com/Bepacom-Raalte/bepacom-HA-Addons/tree/main/bacnetinterface)
 
+<img src="https://raw.githubusercontent.com/Bepacom-Raalte/Bepacom-BACnet-IP-Integration/main/images/addon.png"/>
+
 Download and copy this integration to your Home Assistant's 'custom_components' folder located in /config/.
 
-If you don't know where this is located, follow this small explanation here. Through the 'Samba share' add-on, you can make this folder available on your network.
+If you don't know where this is located, follow this small explanation here. 
+
+Through the 'Samba share' add-on, you can make this folder available on your network.
 
 To add this on your Windows PC, go to "This PC", right click and select add networklocation, and then follow the wizard. 
 
@@ -45,15 +51,15 @@ Restart Home Assistant after putting this integration in /config/.
 
 1. Add a new instance of the Bepacom BACnet/IP Interface.
 
-<img src="./images/integration.png"/>
+<img src="https://raw.githubusercontent.com/Bepacom-Raalte/Bepacom-BACnet-IP-Integration/main/images/integration.png"/>
 
 2. Specify your connection details and preferences. Below the options are explained.
 
-<img src="./images/setup.png"/>
+<img src="https://raw.githubusercontent.com/Bepacom-Raalte/Bepacom-BACnet-IP-Integration/main/images/setup.png"/>
 
 3. Success!
 
-<img src="./images/success.png"/>
+<img src="https://raw.githubusercontent.com/Bepacom-Raalte/Bepacom-BACnet-IP-Integration/main/images/success.png"/>
 
 ## IP Address
 
