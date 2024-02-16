@@ -89,7 +89,9 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
         )
 
         # Start listening
-        asyncio.create_task(listen())
+        self.config_entry.async_create_background_task(
+            self.hass, listen(), "bacnet-listen"
+        )
 
     async def _async_update_data(self) -> DeviceDict:
         try:

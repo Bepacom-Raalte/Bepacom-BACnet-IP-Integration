@@ -122,7 +122,7 @@ class AnalogOutputEntity(
                 .maxPresValue
             )
         else:
-            return 100
+            return 2147483647
 
     @property
     def native_min_value(self):
@@ -137,7 +137,7 @@ class AnalogOutputEntity(
                 .minPresValue
             )
         else:
-            return -100
+            return -2147483648 
 
     @property
     def native_unit_of_measurement(self) -> str:
@@ -263,7 +263,7 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
                 .maxPresValue
             )
         else:
-            return 100
+            return 2147483647
 
     @property
     def native_min_value(self):
@@ -278,7 +278,7 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
                 .minPresValue
             )
         else:
-            return -100
+            return -2147483648 
 
     @property
     def native_unit_of_measurement(self) -> str:
