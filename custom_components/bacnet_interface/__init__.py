@@ -41,7 +41,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Store an instance of the "connecting" class that does the work of speaking
     # with your actual devices.
 
-    entry = validate_entry(entry)
+    # entry = validate_entry(entry)
 
     coordinator = EcoPanelDataUpdateCoordinator(hass, entry=entry)
 
@@ -91,20 +91,16 @@ def validate_entry(entry: ConfigEntry) -> ConfigEntry:
     """Check if all values are filled in, otherwise replace"""
 
     if not entry.data.get(CONF_PORT):
-        # entry.data.update({CONF_PORT: 8099})
-        coordinator.logger.error("Data CONF_PORT not gotten")
+        entry.data.update({CONF_PORT: 8099})
 
     if not entry.data.get(CONF_ENABLED):
-        # entry.data.update({CONF_ENABLED: True})
-        coordinator.logger.error("Data CONF_ENABLED not gotten")
+        entry.data.update({CONF_ENABLED: True})
 
     if not entry.data.get(CONF_HOST):
-        # entry.data.update({CONF_HOST: "127.0.0.1"})
-        coordinator.logger.error("Data CONF_HOST not gotten")
+        entry.data.update({CONF_HOST: "127.0.0.1"})
 
     if not entry.data.get(CONF_NAME):
-        # entry.data.update({CONF_NAME: "object_name"})
-        coordinator.logger.error("Data CONF_NAME not gotten")
+        entry.data.update({CONF_NAME: "object_name"})
 
     return entry
 

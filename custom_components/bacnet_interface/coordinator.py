@@ -4,8 +4,8 @@ from __future__ import annotations
 import asyncio
 from datetime import timedelta
 
-from aioecopanel import (DeviceDict, EcoPanelConnectionClosed, EcoPanelError,
-                         Interface)
+from aioecopanel import (DeviceDict, DeviceDictError, EcoPanelConnectionClosed,
+                         EcoPanelError, Interface)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT, EVENT_HOMEASSISTANT_STOP
 from homeassistant.core import CALLBACK_TYPE, Event, HomeAssistant, callback
@@ -98,7 +98,7 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
             devicedict = await self.interface.update(
                 full_update=not self.last_update_success
             )
-        except EcoPanelError as error:
+        except (EcoPanelError, DeviceDictError) as error:
             raise UpdateFailed(f"Invalid response from API: {error}") from error
 
         if not self.interface.connected and not self.unsub:

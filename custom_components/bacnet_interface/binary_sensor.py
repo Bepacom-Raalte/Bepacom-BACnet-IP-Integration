@@ -28,7 +28,18 @@ async def async_setup_entry(
 
     # Collect from all devices the objects that can become a binary sensor
     for deviceid in coordinator.data.devices:
+        if not coordinator.data.devices[deviceid].objects:
+            LOGGER.warning(f"No objects in {deviceid}!")
+            continue
+
         for objectid in coordinator.data.devices[deviceid].objects:
+            if (
+                not coordinator.data.devices[deviceid]
+                .objects[objectid]
+                .objectIdentifier
+            ):
+                LOGGER.warning(f"No object identifier for {objectid} in {deviceid}!")
+                continue
             if (
                 coordinator.data.devices[deviceid].objects[objectid].objectIdentifier[0]
                 == "binaryInput"

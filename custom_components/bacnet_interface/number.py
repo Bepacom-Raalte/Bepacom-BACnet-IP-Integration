@@ -4,12 +4,12 @@ from statistics import mode
 from typing import Any
 
 from homeassistant.components.number import (NumberDeviceClass, NumberEntity,
-											 NumberEntityDescription)
+                                             NumberEntityDescription)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (CONF_ENABLED, CONF_NAME, PERCENTAGE,
-								 UnitOfElectricCurrent,
-								 UnitOfElectricPotential, UnitOfInformation,
-								 UnitOfIrradiance, UnitOfTemperature)
+                                 UnitOfElectricCurrent,
+                                 UnitOfElectricPotential, UnitOfInformation,
+                                 UnitOfIrradiance, UnitOfTemperature)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -22,332 +22,348 @@ from .coordinator import EcoPanelDataUpdateCoordinator
 
 
 async def async_setup_entry(
-	hass: HomeAssistant,
-	entry: ConfigEntry,
-	async_add_entities: AddEntitiesCallback,
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
 ) -> None:
-	"""Set up EcoPanel sensor based on a config entry."""
-	coordinator: EcoPanelDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
-	entity_list: list = []
+    """Set up EcoPanel sensor based on a config entry."""
+    coordinator: EcoPanelDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
+    entity_list: list = []
 
-	# Collect from all devices the objects that can become a sensor
-	for deviceid in coordinator.data.devices:
-		for objectid in coordinator.data.devices[deviceid].objects:
-			if (
-				coordinator.data.devices[deviceid].objects[objectid].objectIdentifier[0]
-				== "analogOutput"
-			):
-				# Object Type to ObjectIdentifier[0]
-				entity_list.append(
-					AnalogOutputEntity(
-						coordinator=coordinator, deviceid=deviceid, objectid=objectid
-					)
-				)
-			elif (
-				coordinator.data.devices[deviceid].objects[objectid].objectIdentifier[0]
-				== "analogValue"
-			):
-				entity_list.append(
-					AnalogValueEntity(
-						coordinator=coordinator, deviceid=deviceid, objectid=objectid
-					)
-				)
+    # Collect from all devices the objects that can become a sensor
+    if not coordinator.data.devices:
+        LOGGER.warning(f"No devices received from API!")
+        return
 
-	async_add_entities(entity_list)
+    for deviceid in coordinator.data.devices:
+        if not coordinator.data.devices[deviceid].objects:
+            LOGGER.warning(f"No objects in {deviceid}!")
+            continue
+
+        for objectid in coordinator.data.devices[deviceid].objects:
+            if (
+                not coordinator.data.devices[deviceid]
+                .objects[objectid]
+                .objectIdentifier
+            ):
+                LOGGER.warning(f"No object identifier for {objectid} in {deviceid}!")
+                continue
+
+            if (
+                coordinator.data.devices[deviceid].objects[objectid].objectIdentifier[0]
+                == "analogOutput"
+            ):
+                # Object Type to ObjectIdentifier[0]
+                entity_list.append(
+                    AnalogOutputEntity(
+                        coordinator=coordinator, deviceid=deviceid, objectid=objectid
+                    )
+                )
+            elif (
+                coordinator.data.devices[deviceid].objects[objectid].objectIdentifier[0]
+                == "analogValue"
+            ):
+                entity_list.append(
+                    AnalogValueEntity(
+                        coordinator=coordinator, deviceid=deviceid, objectid=objectid
+                    )
+                )
+
+    async_add_entities(entity_list)
 
 
 class AnalogOutputEntity(
-	CoordinatorEntity[EcoPanelDataUpdateCoordinator], NumberEntity
+    CoordinatorEntity[EcoPanelDataUpdateCoordinator], NumberEntity
 ):
-	_attr_has_entity_name = True
+    _attr_has_entity_name = True
 
-	def __init__(
-		self,
-		coordinator: EcoPanelDataUpdateCoordinator,
-		deviceid: str,
-		objectid: str,
-	):
-		"""Initialize a BACnet AnalogOutput object as entity."""
-		super().__init__(coordinator=coordinator)
-		self.deviceid = deviceid
-		self.objectid = objectid
+    def __init__(
+        self,
+        coordinator: EcoPanelDataUpdateCoordinator,
+        deviceid: str,
+        objectid: str,
+    ):
+        """Initialize a BACnet AnalogOutput object as entity."""
+        super().__init__(coordinator=coordinator)
+        self.deviceid = deviceid
+        self.objectid = objectid
 
-	@property
-	def unique_id(self) -> str:
-		return f"{self.deviceid}_{self.objectid}"
+    @property
+    def unique_id(self) -> str:
+        return f"{self.deviceid}_{self.objectid}"
 
-	@property
-	def name(self) -> str:
-		name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
-		if name == "description":
-			return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
-		else:
-			return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
+    @property
+    def name(self) -> str:
+        name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
+        if name == "description":
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
+        else:
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
 
-	@property
-	def icon(self):
-		return "mdi:gesture-swipe-vertical"
+    @property
+    def icon(self):
+        return "mdi:gesture-swipe-vertical"
 
-	@property
-	def entity_registry_enabled_default(self) -> bool:
-		"""Return if the entity should be enabled when first added to the entity registry."""
-		return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
+    @property
+    def entity_registry_enabled_default(self) -> bool:
+        """Return if the entity should be enabled when first added to the entity registry."""
+        return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
 
-	@property
-	def mode(self) -> str:
-		return "box"
+    @property
+    def mode(self) -> str:
+        return "box"
 
-	@property
-	def native_step(self):
-		return 0.1
+    @property
+    def native_step(self):
+        return 0.1
 
-	@property
-	def native_value(self):
-		return (
-			self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.presentValue
-		)
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
+        )
 
-	@property
-	def native_max_value(self):
-		if (
-			self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.maxPresValue
-		):
-			return (
-				self.coordinator.data.devices[self.deviceid]
-				.objects[self.objectid]
-				.maxPresValue
-			)
-		else:
-			return 2147483647
+    @property
+    def native_max_value(self):
+        if (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .maxPresValue
+        ):
+            return (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .maxPresValue
+            )
+        else:
+            return 2147483647
 
-	@property
-	def native_min_value(self):
-		if (
-			self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.minPresValue
-		):
-			return (
-				self.coordinator.data.devices[self.deviceid]
-				.objects[self.objectid]
-				.minPresValue
-			)
-		else:
-			return -2147483648
+    @property
+    def native_min_value(self):
+        if (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .minPresValue
+        ):
+            return (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .minPresValue
+            )
+        else:
+            return -2147483648
 
-	@property
-	def native_unit_of_measurement(self) -> str:
-		if (
-			self.device_class == NumberDeviceClass.TEMPERATURE
-			and "celsius"
-			in self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.units.lower()
-		):
-			return UnitOfTemperature.CELSIUS
-		else:
-			return None
+    @property
+    def native_unit_of_measurement(self) -> str:
+        if (
+            self.device_class == NumberDeviceClass.TEMPERATURE
+            and "celsius"
+            in self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .units.lower()
+        ):
+            return UnitOfTemperature.CELSIUS
+        else:
+            return None
 
-	@property
-	def device_class(self) -> str:
-		if (
-			"degree"
-			in self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.units.lower()
-		):
-			return NumberDeviceClass.TEMPERATURE
+    @property
+    def device_class(self) -> str:
+        if (
+            "degree"
+            in self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .units.lower()
+        ):
+            return NumberDeviceClass.TEMPERATURE
 
-		else:
-			return None
+        else:
+            return None
 
-	@property
-	def extra_state_attributes(self) -> dict[str, Any]:
-		return {
-			"OutOfService": self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.outOfService,
-			"EventState": self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.eventState,
-			"reliability": self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.reliability,
-		}
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        return {
+            "OutOfService": self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .outOfService,
+            "EventState": self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .eventState,
+            "reliability": self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .reliability,
+        }
 
-	@property
-	def device_info(self) -> DeviceInfo:
-		return DeviceInfo(
-			identifiers={(DOMAIN, self.deviceid)},
-			name=f"{self.coordinator.data.devices[self.deviceid].objects[self.deviceid].objectName}",
-			manufacturer=self.coordinator.data.devices[self.deviceid]
-			.objects[self.deviceid]
-			.vendorName,
-			model=self.coordinator.data.devices[self.deviceid]
-			.objects[self.deviceid]
-			.modelName,
-		)
+    @property
+    def device_info(self) -> DeviceInfo:
+        return DeviceInfo(
+            identifiers={(DOMAIN, self.deviceid)},
+            name=f"{self.coordinator.data.devices[self.deviceid].objects[self.deviceid].objectName}",
+            manufacturer=self.coordinator.data.devices[self.deviceid]
+            .objects[self.deviceid]
+            .vendorName,
+            model=self.coordinator.data.devices[self.deviceid]
+            .objects[self.deviceid]
+            .modelName,
+        )
 
-	async def async_set_native_value(self, value: float) -> None:
-		"""Set analogOutput object to active."""
-		await self.coordinator.interface.write_property(
-			deviceid=self.deviceid, objectid=self.objectid, presentValue=value
-		)
+    async def async_set_native_value(self, value: float) -> None:
+        """Set analogOutput object to active."""
+        await self.coordinator.interface.write_property(
+            deviceid=self.deviceid, objectid=self.objectid, presentValue=value
+        )
 
 
 class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], NumberEntity):
-	_attr_has_entity_name = True
+    _attr_has_entity_name = True
 
-	def __init__(
-		self,
-		coordinator: EcoPanelDataUpdateCoordinator,
-		deviceid: str,
-		objectid: str,
-	):
-		"""Initialize a BACnet AnalogValue object as entity."""
-		super().__init__(coordinator=coordinator)
-		self.deviceid = deviceid
-		self.objectid = objectid
+    def __init__(
+        self,
+        coordinator: EcoPanelDataUpdateCoordinator,
+        deviceid: str,
+        objectid: str,
+    ):
+        """Initialize a BACnet AnalogValue object as entity."""
+        super().__init__(coordinator=coordinator)
+        self.deviceid = deviceid
+        self.objectid = objectid
 
-	@property
-	def unique_id(self) -> str:
-		return f"{self.deviceid}_{self.objectid}"
+    @property
+    def unique_id(self) -> str:
+        return f"{self.deviceid}_{self.objectid}"
 
-	@property
-	def name(self) -> str:
-		name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
-		if name == "description":
-			return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
-		else:
-			return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
+    @property
+    def name(self) -> str:
+        name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
+        if name == "description":
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
+        else:
+            return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
 
-	@property
-	def icon(self):
-		return "mdi:pencil"
+    @property
+    def icon(self):
+        return "mdi:pencil"
 
-	@property
-	def entity_registry_enabled_default(self) -> bool:
-		"""Return if the entity should be enabled when first added to the entity registry."""
-		return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
+    @property
+    def entity_registry_enabled_default(self) -> bool:
+        """Return if the entity should be enabled when first added to the entity registry."""
+        return self.coordinator.config_entry.data.get(CONF_ENABLED, False)
 
-	@property
-	def mode(self) -> str:
-		return "box"
+    @property
+    def mode(self) -> str:
+        return "box"
 
-	@property
-	def native_step(self):
-		return 0.1
+    @property
+    def native_step(self):
+        return 0.1
 
-	@property
-	def native_value(self):
-		return (
-			self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.presentValue
-		)
+    @property
+    def native_value(self):
+        return (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
+        )
 
-	@property
-	def native_max_value(self):
-		if (
-			self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.maxPresValue
-		):
-			return (
-				self.coordinator.data.devices[self.deviceid]
-				.objects[self.objectid]
-				.maxPresValue
-			)
-		else:
-			return 2147483647
+    @property
+    def native_max_value(self):
+        if (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .maxPresValue
+        ):
+            return (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .maxPresValue
+            )
+        else:
+            return 2147483647
 
-	@property
-	def native_min_value(self):
-		if (
-			self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.minPresValue
-		):
-			return (
-				self.coordinator.data.devices[self.deviceid]
-				.objects[self.objectid]
-				.minPresValue
-			)
-		else:
-			return -2147483648
+    @property
+    def native_min_value(self):
+        if (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .minPresValue
+        ):
+            return (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .minPresValue
+            )
+        else:
+            return -2147483648
 
-	@property
-	def native_unit_of_measurement(self) -> str:
-		if (
-			"celsius"
-			in self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.units.lower()
-		):
-			return UnitOfTemperature.CELSIUS
-		elif (
-			"percent"
-			in self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.units.lower()
-		):
-			return PERCENTAGE
-		elif (
-			"millivolt"
-			in self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.units.lower()
-		):
-			return UnitOfElectricPotential.MILLIVOLT
-		else:
-			return None
+    @property
+    def native_unit_of_measurement(self) -> str:
+        if (
+            "celsius"
+            in self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .units.lower()
+        ):
+            return UnitOfTemperature.CELSIUS
+        elif (
+            "percent"
+            in self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .units.lower()
+        ):
+            return PERCENTAGE
+        elif (
+            "millivolt"
+            in self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .units.lower()
+        ):
+            return UnitOfElectricPotential.MILLIVOLT
+        else:
+            return None
 
-	@property
-	def device_class(self) -> str:
-		if (
-			"degree"
-			in self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.units.lower()
-		):
-			return NumberDeviceClass.TEMPERATURE
+    @property
+    def device_class(self) -> str:
+        if (
+            "degree"
+            in self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .units.lower()
+        ):
+            return NumberDeviceClass.TEMPERATURE
 
-		else:
-			return None
+        else:
+            return None
 
-	@property
-	def extra_state_attributes(self) -> dict[str, Any]:
-		return {
-			"OutOfService": self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.outOfService,
-			"EventState": self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.eventState,
-			"reliability": self.coordinator.data.devices[self.deviceid]
-			.objects[self.objectid]
-			.reliability,
-		}
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        return {
+            "OutOfService": self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .outOfService,
+            "EventState": self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .eventState,
+            "reliability": self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .reliability,
+        }
 
-	@property
-	def device_info(self) -> DeviceInfo:
-		return DeviceInfo(
-			identifiers={(DOMAIN, self.deviceid)},
-			name=f"{self.coordinator.data.devices[self.deviceid].objects[self.deviceid].objectName}",
-			manufacturer=self.coordinator.data.devices[self.deviceid]
-			.objects[self.deviceid]
-			.vendorName,
-			model=self.coordinator.data.devices[self.deviceid]
-			.objects[self.deviceid]
-			.modelName,
-		)
+    @property
+    def device_info(self) -> DeviceInfo:
+        return DeviceInfo(
+            identifiers={(DOMAIN, self.deviceid)},
+            name=f"{self.coordinator.data.devices[self.deviceid].objects[self.deviceid].objectName}",
+            manufacturer=self.coordinator.data.devices[self.deviceid]
+            .objects[self.deviceid]
+            .vendorName,
+            model=self.coordinator.data.devices[self.deviceid]
+            .objects[self.deviceid]
+            .modelName,
+        )
 
-	async def async_set_native_value(self, value: float) -> None:
-		"""Set analogOutput object to active."""
-		await self.coordinator.interface.write_property(
-			deviceid=self.deviceid, objectid=self.objectid, presentValue=value
-		)
+    async def async_set_native_value(self, value: float) -> None:
+        """Set analogOutput object to active."""
+        await self.coordinator.interface.write_property(
+            deviceid=self.deviceid, objectid=self.objectid, presentValue=value
+        )
