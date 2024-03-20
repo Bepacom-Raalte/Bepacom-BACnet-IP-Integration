@@ -109,7 +109,7 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
         except (EcoPanelError, DeviceDictError) as error:
             raise UpdateFailed(f"Invalid response from API: {error}") from error
 
-        if not self.interface.connected and not self.unsub:
+        if devicedict is not None and not self.interface.connected and not self.unsub:
             self._use_websocket()
 
         return devicedict
