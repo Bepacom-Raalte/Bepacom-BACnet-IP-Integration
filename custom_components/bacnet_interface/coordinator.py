@@ -45,6 +45,14 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
     def _use_websocket(self) -> None:
         """Use websockets for updating"""
 
+        def check_data(data) -> None:
+            if data is not DeviceDict:
+                LOGGER.warning(f"Received data is not DeviceDict type! {data}")
+            elif data is None:
+                LOGGER.warning(f"Received data is NoneType!")
+            else:
+                self.async_set_updated_data(data)
+
         async def listen() -> None:
             """Listen for state changes through websocket"""
             try:
@@ -62,7 +70,7 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
                 # This will stay running in the background.
                 # It calls DataUpdateCoordinator.async_set_updated_data when a message is received on the websocket.
                 # The data will then be accessable on coordinator.data where coordinator is the variable name of EcoPanelDataUpdateCoordinator.
-                await self.interface.listen(callback=self.async_set_updated_data)
+                await self.interface.listen(callback=check_data)
 
             except EcoPanelConnectionClosed as err:
                 self.last_update_success = False
