@@ -46,7 +46,7 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
         """Use websockets for updating"""
 
         def check_data(data) -> None:
-            if data is not DeviceDict:
+            if isinstance(data, DeviceDict):
                 LOGGER.warning(f"Received data is not DeviceDict type! {data}")
             elif data is None:
                 LOGGER.warning(f"Received data is NoneType!")
