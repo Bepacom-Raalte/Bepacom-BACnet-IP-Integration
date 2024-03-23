@@ -79,6 +79,10 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
                 self.last_update_success = False
                 self.async_update_listeners()
                 self.logger.error(err)
+            except Exception as err:
+                self.last_update_success = False
+                self.async_update_listeners()
+                self.logger.error(err)
 
             # Make sure we are disconnected
             await self.interface.disconnect()
