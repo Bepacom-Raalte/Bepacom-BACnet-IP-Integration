@@ -115,7 +115,28 @@ class AnalogOutputEntity(
 
     @property
     def native_step(self):
-        return 0.1
+        if (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .resolution
+        ):
+            return (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .resolution
+            )
+        elif (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .covIncrement
+        ):
+            return (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .covIncrement
+            )
+        else:
+            return 1
 
     @property
     def native_value(self):

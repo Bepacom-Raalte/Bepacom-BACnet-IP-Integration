@@ -1,9 +1,10 @@
 """The Bepacom EcoPanel BACnet/IP integration."""
 from __future__ import annotations
 
-import voluptuous as vol
 from asyncio import sleep
 from copy import copy
+
+import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (ATTR_ENTITY_ID, CONF_ENABLED, CONF_HOST,
                                  CONF_NAME, CONF_PORT)
@@ -57,10 +58,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Reload entry when its updated.
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
-    
+
     entry.async_create_background_task(
-            hass, async_monitor_data_size(hass, entry, coordinator), "bacnet-monitor-data"
-        )
+        hass, async_monitor_data_size(hass, entry, coordinator), "bacnet-monitor-data"
+    )
 
     async def write_release(call: ServiceCall) -> ServiceResponse:
         """Write empty presentValue that serves to release higher priority write request."""
@@ -153,29 +154,30 @@ async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     await hass.config_entries.async_reload(entry.entry_id)
 
 
-async def async_monitor_data_size(hass: HomeAssistant, entry: ConfigEntry, coordinator: EcoPanelDataUpdateCoordinator) -> None:
+async def async_monitor_data_size(
+    hass: HomeAssistant, entry: ConfigEntry, coordinator: EcoPanelDataUpdateCoordinator
+) -> None:
     """Monitor data size, and reload if it increases."""
-    
+
     old_devices = copy(coordinator.data.devices)
     old_devices_dict = {}
-    
+
     for device in old_devices:
         objects = {device: copy(coordinator.data.devices[device].objects)}
         old_devices_dict.update(objects)
-    
+
     while True:
-        await sleep(3)
-        
+        await sleep(15)
+
         if len(coordinator.data.devices) > len(old_devices):
-            
             LOGGER.debug(f"Reloading after new device detected!")
-            
-            await hass.config_entries.async_schedule_reload(entry.entry_id)  
-            
+
+            await hass.config_entries.async_schedule_reload(entry.entry_id)
+
         for device in coordinator.data.devices:
-            
-            if len(coordinator.data.devices[device].objects) > len(old_devices_dict[device]):
-                
+            if len(coordinator.data.devices[device].objects) > len(
+                old_devices_dict[device]
+            ):
                 LOGGER.debug(f"Increased object size")
-                
+
                 await hass.config_entries.async_schedule_reload(entry.entry_id)
