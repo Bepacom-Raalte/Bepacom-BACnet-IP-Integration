@@ -43,7 +43,8 @@
     "name_select": {
       "options": {
         "object_name": "Object naam",
-        "description": "'Description' BACnet eigenschap"
+        "description": "'Description' BACnet eigenschap",
+        "object_identifier": "'Object identifier' BACnet eigenschap"
       }
     }
   },

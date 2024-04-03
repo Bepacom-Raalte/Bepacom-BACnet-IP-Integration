@@ -8,6 +8,6 @@
 	"integration_type": "hub",
 	"iot_class": "local_push",
 	"issue_tracker": "https://github.com/Bepacom-Raalte/Bepacom-BACnet-IP-Integration/issues",
-	"requirements": [ "aioecopanel==0.0.8" ],
-	"version": "0.1.6"
+	"requirements": [ "aioecopanel==0.0.9" ],
+	"version": "0.1.7"
 }

@@ -77,6 +77,9 @@ class BinaryInputEntity(
         name = self.coordinator.config_entry.data.get(CONF_NAME, "object_name")
         if name == "description":
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
+        elif name == "object_identifier":
+            identifier = self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectIdentifier
+            return f"{identifier[0]}:{identifier[1]}"
         else:
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
 

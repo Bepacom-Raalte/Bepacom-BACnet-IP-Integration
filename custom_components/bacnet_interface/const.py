@@ -11,4 +11,4 @@ SCAN_INTERVAL = timedelta(seconds=60)
 
 STATETEXT_OFFSET = 1  # JCO
 
-NAME_OPTIONS = ["object_name", "description"]
+NAME_OPTIONS = ["object_name", "description", "object_identifier"]
