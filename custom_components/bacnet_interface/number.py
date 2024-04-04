@@ -283,7 +283,28 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
 
     @property
     def native_step(self):
-        return 0.1
+        if (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .resolution
+        ):
+            return (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .resolution
+            )
+        elif (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .covIncrement
+        ):
+            return (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .covIncrement
+            )
+        else:
+            return 1
 
     @property
     def native_value(self):
@@ -321,7 +342,7 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
                 .minPresValue
             )
         else:
-            return -2147483648
+            return -2147483647
 
     @property
     def native_unit_of_measurement(self) -> str:
