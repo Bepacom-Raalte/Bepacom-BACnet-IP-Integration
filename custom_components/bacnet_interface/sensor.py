@@ -5,6 +5,7 @@ from typing import Any
 from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorEntityDescription,
                                              SensorStateClass)
+from homeassistant.components.sensor.const import DEVICE_CLASS_UNITS
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (CONF_ENABLED, CONF_NAME, PERCENTAGE,
                                  UnitOfElectricCurrent,
@@ -20,6 +21,7 @@ from homeassistant.util.dt import utcnow
 from .const import STATETEXT_OFFSET  # JCO
 from .const import DOMAIN, LOGGER
 from .coordinator import EcoPanelDataUpdateCoordinator
+from .helper import bacnet_to_device_class, bacnet_to_ha_units
 
 
 async def async_setup_entry(
@@ -96,7 +98,11 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
         if name == "description":
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
         elif name == "object_identifier":
-            identifier = self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectIdentifier
+            identifier = (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .objectIdentifier
+            )
             return f"{identifier[0]}:{identifier[1]}"
         else:
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
@@ -120,52 +126,26 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
         return "mdi:gauge"
 
     @property
-    def device_class(self) -> str:
+    def device_class(self) -> str | None:
         if (
-            "degree"
-            in self.coordinator.data.devices[self.deviceid]
+            units := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .units.lower()
+            .units
         ):
-            return SensorDeviceClass.TEMPERATURE
-        elif (
-            "watts"
-            and "meter"
-            in self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .units.lower()
-        ):
-            return SensorDeviceClass.IRRADIANCE
-        elif (
-            "humidity"
-            in self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .units.lower()
-        ):
-            return SensorDeviceClass.HUMIDITY
+            return bacnet_to_device_class(units, DEVICE_CLASS_UNITS)
         else:
             return None
 
     @property
-    def native_unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str | None:
         if (
-            self.device_class == SensorDeviceClass.TEMPERATURE
-            and "celsius"
-            in self.coordinator.data.devices[self.deviceid]
+            units := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .units.lower()
+            .units
         ):
-            return UnitOfTemperature.CELSIUS
-        elif self.device_class == SensorDeviceClass.IRRADIANCE:
-            return UnitOfIrradiance.WATTS_PER_SQUARE_METER
-        elif (
-            self.device_class == SensorDeviceClass.HUMIDITY
-            or "percent"
-            in self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .units.lower()
-        ):
-            return PERCENTAGE
+            return bacnet_to_ha_units(units)
+        else:
+            return None
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
@@ -225,7 +205,11 @@ class MultiStateInputEntity(
         if name == "description":
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
         elif name == "object_identifier":
-            identifier = self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectIdentifier
+            identifier = (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .objectIdentifier
+            )
             return f"{identifier[0]}:{identifier[1]}"
         else:
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"

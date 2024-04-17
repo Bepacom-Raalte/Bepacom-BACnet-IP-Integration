@@ -86,7 +86,11 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
         if name == "description":
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
         elif name == "object_identifier":
-            identifier = self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectIdentifier
+            identifier = (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .objectIdentifier
+            )
             return f"{identifier[0]}:{identifier[1]}"
         else:
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
@@ -188,7 +192,11 @@ class BinaryOutputEntity(
         if name == "description":
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
         elif name == "object_identifier":
-            identifier = self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectIdentifier
+            identifier = (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .objectIdentifier
+            )
             return f"{identifier[0]}:{identifier[1]}"
         else:
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"

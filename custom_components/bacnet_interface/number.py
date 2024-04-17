@@ -5,6 +5,7 @@ from typing import Any
 
 from homeassistant.components.number import (NumberDeviceClass, NumberEntity,
                                              NumberEntityDescription)
+from homeassistant.components.number.const import DEVICE_CLASS_UNITS
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (CONF_ENABLED, CONF_NAME, PERCENTAGE,
                                  UnitOfElectricCurrent,
@@ -19,6 +20,7 @@ from homeassistant.util.dt import utcnow
 
 from .const import DOMAIN, LOGGER
 from .coordinator import EcoPanelDataUpdateCoordinator
+from .helper import bacnet_to_device_class, bacnet_to_ha_units
 
 
 async def async_setup_entry(
@@ -98,7 +100,11 @@ class AnalogOutputEntity(
         if name == "description":
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
         elif name == "object_identifier":
-            identifier = self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectIdentifier
+            identifier = (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .objectIdentifier
+            )
             return f"{identifier[0]}:{identifier[1]}"
         else:
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
@@ -180,28 +186,24 @@ class AnalogOutputEntity(
             return -2147483648
 
     @property
-    def native_unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str | None:
         if (
-            self.device_class == NumberDeviceClass.TEMPERATURE
-            and "celsius"
-            in self.coordinator.data.devices[self.deviceid]
+            units := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .units.lower()
+            .units
         ):
-            return UnitOfTemperature.CELSIUS
+            return bacnet_to_ha_units(units)
         else:
             return None
 
     @property
-    def device_class(self) -> str:
+    def device_class(self) -> str | None:
         if (
-            "degree"
-            in self.coordinator.data.devices[self.deviceid]
+            units := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .units.lower()
+            .units
         ):
-            return NumberDeviceClass.TEMPERATURE
-
+            return bacnet_to_device_class(units, DEVICE_CLASS_UNITS)
         else:
             return None
 
@@ -263,7 +265,11 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
         if name == "description":
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].description}"
         elif name == "object_identifier":
-            identifier = self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectIdentifier
+            identifier = (
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .objectIdentifier
+            )
             return f"{identifier[0]}:{identifier[1]}"
         else:
             return f"{self.coordinator.data.devices[self.deviceid].objects[self.objectid].objectName}"
@@ -345,41 +351,24 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
             return -2147483647
 
     @property
-    def native_unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str | None:
         if (
-            "celsius"
-            in self.coordinator.data.devices[self.deviceid]
+            units := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .units.lower()
+            .units
         ):
-            return UnitOfTemperature.CELSIUS
-        elif (
-            "percent"
-            in self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .units.lower()
-        ):
-            return PERCENTAGE
-        elif (
-            "millivolt"
-            in self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .units.lower()
-        ):
-            return UnitOfElectricPotential.MILLIVOLT
+            return bacnet_to_ha_units(units)
         else:
             return None
 
     @property
-    def device_class(self) -> str:
+    def device_class(self) -> str | None:
         if (
-            "degree"
-            in self.coordinator.data.devices[self.deviceid]
+            units := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .units.lower()
+            .units
         ):
-            return NumberDeviceClass.TEMPERATURE
-
+            return bacnet_to_device_class(units, DEVICE_CLASS_UNITS)
         else:
             return None
 
