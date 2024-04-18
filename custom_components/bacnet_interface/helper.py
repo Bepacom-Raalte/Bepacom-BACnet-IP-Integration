@@ -110,7 +110,7 @@ def bacnet_to_ha_units(unit_in: str | None) -> str | None:
         case "cyclesPerMinute":
             return None
         case "days":
-            return None
+            return UnitOfTime.DAYS
         case "decibels":
             return UnitOfSoundPressure.DECIBEL
         case "decibelsA":
@@ -124,7 +124,7 @@ def bacnet_to_ha_units(unit_in: str | None) -> str | None:
         case "degreeDaysFahrenheit":
             return None
         case "degreesAngular":
-            return None
+            return DEGREE
         case "degreesCelsius":
             return UnitOfTemperature.CELSIUS
         case "degreesCelsiusPerHour":
@@ -144,7 +144,7 @@ def bacnet_to_ha_units(unit_in: str | None) -> str | None:
         case "degreesKelvinPerMinute":
             return None
         case "degreesPhase":
-            return None
+            return DEGREE
         case "deltaDegreesFahrenheit":
             return None
         case "deltaDegreesKelvin":

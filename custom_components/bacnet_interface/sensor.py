@@ -7,10 +7,8 @@ from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorStateClass)
 from homeassistant.components.sensor.const import DEVICE_CLASS_UNITS
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (CONF_ENABLED, CONF_NAME, PERCENTAGE,
-                                 UnitOfElectricCurrent,
-                                 UnitOfElectricPotential, UnitOfInformation,
-                                 UnitOfIrradiance, UnitOfTemperature)
+from homeassistant.const import (CONF_ENABLED, CONF_NAME,
+                                 UnitOfEnergy)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -176,7 +174,10 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
 
     @property
     def state_class(self) -> str:
-        return "measurement"
+        if (self.native_unit_of_measurement in UnitOfEnergy):
+            return "total"
+        else:
+            return "measurement"
 
 
 class MultiStateInputEntity(
