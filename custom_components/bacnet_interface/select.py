@@ -145,12 +145,26 @@ class MultiStateOutputEntity(
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         return {
-            "OutOfService": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .outOfService,
-            "EventState": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .eventState,
+            "inAlarm": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[0]
+            ),
+            "fault": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[1]
+            ),
+            "overridden": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[2]
+            ),
+            "outOfService": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[3]
+            ),
         }
 
     async def async_select_option(self, option: str) -> None:
@@ -248,12 +262,26 @@ class MultiStateValueEntity(
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         return {
-            "OutOfService": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .outOfService,
-            "EventState": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .eventState,
+            "inAlarm": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[0]
+            ),
+            "fault": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[1]
+            ),
+            "overridden": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[2]
+            ),
+            "outOfService": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[3]
+            ),
         }
 
     async def async_select_option(self, option: str) -> None:
