@@ -149,11 +149,13 @@ class AnalogOutputEntity(
 
     @property
     def native_value(self):
-        return (
-            self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .presentValue
-        )
+        
+        value = self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue
+        
+        if self.native_step >= 1:
+            return int(value)
+            
+        return value
 
     @property
     def native_max_value(self):
@@ -314,11 +316,13 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
 
     @property
     def native_value(self):
-        return (
-            self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .presentValue
-        )
+        
+        value = self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue
+        
+        if self.native_step >= 1:
+            return int(value)
+            
+        return value
 
     @property
     def native_max_value(self):

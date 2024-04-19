@@ -8,7 +8,7 @@ from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
 from homeassistant.components.sensor.const import DEVICE_CLASS_UNITS
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (CONF_ENABLED, CONF_NAME,
-                                 UnitOfEnergy)
+                                 UnitOfEnergy, UnitOfVolume)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -175,6 +175,8 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
     @property
     def state_class(self) -> str:
         if (self.native_unit_of_measurement in UnitOfEnergy):
+            return "total"
+        elif (self.native_unit_of_measurement in UnitOfVolume):
             return "total"
         else:
             return "measurement"
