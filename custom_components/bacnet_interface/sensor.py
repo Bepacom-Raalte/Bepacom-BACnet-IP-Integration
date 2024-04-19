@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from dataclasses import dataclass
+from math import log10
 from typing import Any
 
 from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
@@ -7,8 +8,8 @@ from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorStateClass)
 from homeassistant.components.sensor.const import DEVICE_CLASS_UNITS
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (CONF_ENABLED, CONF_NAME,
-                                 UnitOfEnergy, UnitOfVolume)
+from homeassistant.const import (CONF_ENABLED, CONF_NAME, UnitOfEnergy,
+                                 UnitOfVolume)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -112,12 +113,28 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
 
     @property
     def native_value(self):
-        return round(
+        value = (
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .presentValue,
-            1,
+            .presentValue
         )
+
+        if (
+            resolution := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .resolution
+        ):
+            resolution = int(-1 * log10(resolution))
+            return round(value, resolution)
+        elif (
+            covIncrement := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .covIncrement
+        ):
+            covIncrement = int(-1 * log10(covIncrement))
+            return round(value, covIncrement)
+
+        return round(value)
 
     @property
     def icon(self):
@@ -174,9 +191,9 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
 
     @property
     def state_class(self) -> str:
-        if (self.native_unit_of_measurement in UnitOfEnergy):
+        if self.native_unit_of_measurement in UnitOfEnergy:
             return "total"
-        elif (self.native_unit_of_measurement in UnitOfVolume):
+        elif self.native_unit_of_measurement in UnitOfVolume:
             return "total"
         else:
             return "measurement"
