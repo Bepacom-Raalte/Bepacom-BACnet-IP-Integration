@@ -124,6 +124,8 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
             .objects[self.objectid]
             .resolution
         ):
+            if resolution >= 1:
+                return int(value)
             resolution = int(-1 * log10(resolution))
             return round(value, resolution)
         elif (
@@ -131,10 +133,12 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
             .objects[self.objectid]
             .covIncrement
         ):
+            if covIncrement >= 1:
+                return int(value)
             covIncrement = int(-1 * log10(covIncrement))
             return round(value, covIncrement)
 
-        return round(value)
+        return round(value, 1)
 
     @property
     def icon(self):
