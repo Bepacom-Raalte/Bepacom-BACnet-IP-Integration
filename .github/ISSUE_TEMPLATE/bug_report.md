@@ -1,15 +1,11 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
-
----
-
 **Is it a bug of the integration or add-on?**
 The BACnet interface consists of 2 parts, the integration and the add-on.
 If the add-on isn't functioning correctly, please make an issue [here](https://github.com/Bepacom-Raalte/bepacom-HA-Addons)!
+
+**Upload log files**
+Please upload a couple of log files that could help understand the problem.
+1. Upload Home Assistant logs from Settings > System > Logs. Press the download button at this page.
+2. Upload the logs from the add-on web UI. There is a button to download logs.
 
 **Describe the bug**
 A clear and concise description of what the bug is.
