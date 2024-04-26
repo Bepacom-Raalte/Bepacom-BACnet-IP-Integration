@@ -27,8 +27,12 @@ async def async_setup_entry(
     coordinator: EcoPanelDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     entity_list: list = []
 
-    # Collect from all devices the objects that can become a binary sensor
+    # Collect from all devices the objects that can become a select.
     for deviceid in coordinator.data.devices:
+        if deviceid is None:
+            LOGGER.warning(f"Device ID is None!")
+            continue
+
         if not coordinator.data.devices[deviceid].objects:
             LOGGER.warning(f"No objects in {deviceid}!")
             continue

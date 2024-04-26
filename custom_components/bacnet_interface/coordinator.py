@@ -48,8 +48,8 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
         def check_data(data) -> None:
             if not isinstance(data, DeviceDict):
                 LOGGER.warning(f"Received data is not DeviceDict type! {data}")
-            elif data is None:
-                LOGGER.warning(f"Received data is NoneType!")
+            elif data.devices is None:
+                LOGGER.warning(f"Received data.devices is NoneType!")
             else:
                 self.async_set_updated_data(data)
 
