@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from dataclasses import dataclass
+from math import log10
 from typing import Any
 
 from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
@@ -7,8 +8,8 @@ from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorStateClass)
 from homeassistant.components.sensor.const import DEVICE_CLASS_UNITS
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (CONF_ENABLED, CONF_NAME,
-                                 UnitOfEnergy)
+from homeassistant.const import (CONF_ENABLED, CONF_NAME, UnitOfEnergy,
+                                 UnitOfVolume)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -112,12 +113,32 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
 
     @property
     def native_value(self):
-        return round(
+        value = (
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .presentValue,
-            1,
+            .presentValue
         )
+
+        if (
+            resolution := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .resolution
+        ):
+            if resolution >= 1:
+                return int(value)
+            resolution = int(-1 * log10(resolution))
+            return round(value, resolution)
+        elif (
+            covIncrement := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .covIncrement
+        ):
+            if covIncrement >= 1:
+                return int(value)
+            covIncrement = int(-1 * log10(covIncrement))
+            return round(value, covIncrement)
+
+        return round(value, 1)
 
     @property
     def icon(self):
@@ -148,15 +169,26 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         return {
-            "OutOfService": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .outOfService,
-            "EventState": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .eventState,
-            "reliability": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .reliability,
+            "inAlarm": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[0]
+            ),
+            "fault": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[1]
+            ),
+            "overridden": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[2]
+            ),
+            "outOfService": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[3]
+            ),
         }
 
     @property
@@ -174,7 +206,9 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
 
     @property
     def state_class(self) -> str:
-        if (self.native_unit_of_measurement in UnitOfEnergy):
+        if self.native_unit_of_measurement in UnitOfEnergy:
+            return "total"
+        elif self.native_unit_of_measurement in UnitOfVolume:
             return "total"
         else:
             return "measurement"
@@ -240,12 +274,26 @@ class MultiStateInputEntity(
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         return {
-            "OutOfService": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .outOfService,
-            "EventState": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .eventState,
+            "inAlarm": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[0]
+            ),
+            "fault": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[1]
+            ),
+            "overridden": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[2]
+            ),
+            "outOfService": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[3]
+            ),
         }
 
     @property

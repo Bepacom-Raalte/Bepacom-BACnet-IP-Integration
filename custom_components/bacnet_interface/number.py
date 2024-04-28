@@ -149,11 +149,16 @@ class AnalogOutputEntity(
 
     @property
     def native_value(self):
-        return (
+        value = (
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .presentValue
         )
+
+        if self.native_step >= 1:
+            return int(value)
+
+        return value
 
     @property
     def native_max_value(self):
@@ -210,15 +215,26 @@ class AnalogOutputEntity(
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         return {
-            "OutOfService": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .outOfService,
-            "EventState": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .eventState,
-            "reliability": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .reliability,
+            "inAlarm": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[0]
+            ),
+            "fault": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[1]
+            ),
+            "overridden": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[2]
+            ),
+            "outOfService": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[3]
+            ),
         }
 
     @property
@@ -314,11 +330,16 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
 
     @property
     def native_value(self):
-        return (
+        value = (
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .presentValue
         )
+
+        if self.native_step >= 1:
+            return int(value)
+
+        return value
 
     @property
     def native_max_value(self):
@@ -375,15 +396,26 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         return {
-            "OutOfService": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .outOfService,
-            "EventState": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .eventState,
-            "reliability": self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .reliability,
+            "inAlarm": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[0]
+            ),
+            "fault": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[1]
+            ),
+            "overridden": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[2]
+            ),
+            "outOfService": bool(
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .statusFlags[3]
+            ),
         }
 
     @property
