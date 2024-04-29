@@ -261,11 +261,11 @@ class MultiStateInputEntity(
             .objects[self.objectid]
             .presentValue
         )
-        return (
-            self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .stateText[state_val - STATETEXT_OFFSET]  # JCO
-        )
+        
+        if (state_text := self.coordinator.data.devices[self.deviceid].objects[self.objectid].stateText):
+            return state_text[state_val - STATETEXT_OFFSET] #JCO
+        else:
+            return state_val
 
     @property
     def icon(self):
