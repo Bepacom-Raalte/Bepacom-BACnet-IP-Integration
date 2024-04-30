@@ -50,6 +50,15 @@ async def async_setup_entry(
                 coordinator.data.devices[deviceid].objects[objectid].objectIdentifier[0]
                 == "multiStateValue"
             ):
+                if (
+                    coordinator.data.devices[deviceid].objects[objectid].numberOfStates
+                    < 1
+                ):
+                    LOGGER.warning(
+                        f"{deviceid} {objectid} is invalid as it has less that 1 state."
+                    )
+                    continue
+
                 entity_list.append(
                     MultiStateValueEntity(
                         coordinator=coordinator, deviceid=deviceid, objectid=objectid
@@ -59,6 +68,15 @@ async def async_setup_entry(
                 coordinator.data.devices[deviceid].objects[objectid].objectIdentifier[0]
                 == "multiStateOutput"
             ):
+                if (
+                    coordinator.data.devices[deviceid].objects[objectid].numberOfStates
+                    < 1
+                ):
+                    LOGGER.warning(
+                        f"{deviceid} {objectid} is invalid as it has less that 1 state."
+                    )
+                    continue
+
                 entity_list.append(
                     MultiStateOutputEntity(
                         coordinator=coordinator, deviceid=deviceid, objectid=objectid
@@ -114,23 +132,45 @@ class MultiStateOutputEntity(
 
     @property
     def options(self) -> list:
-        if (state_text := self.coordinator.data.devices[self.deviceid].objects[self.objectid].stateText):
+        if (
+            state_text := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .stateText
+        ):
             return state_text
-        elif (number_of_states := self.coordinator.data.devices[self.deviceid].objects[self.objectid].numberOfStates):
+        elif (
+            number_of_states := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .numberOfStates
+        ):
             return list(range(1, number_of_states + 1))
         else:
-            LOGGER.error(f"{self.deviceid} {self.objectid} is missing REQUIRED stateText property!")
+            LOGGER.error(
+                f"{self.deviceid} {self.objectid} is missing REQUIRED stateText property!"
+            )
             return None
 
     @property
     def current_option(self) -> str:
-        pres_val = self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue
-        
-        if (state_text := self.coordinator.data.devices[self.deviceid].objects[self.objectid].stateText):
+        pres_val = (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
+        )
+
+        if (
+            state_text := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .stateText
+        ):
             return state_text[pres_val - STATETEXT_OFFSET]
-        elif (number_of_states := self.coordinator.data.devices[self.deviceid].objects[self.objectid].numberOfStates):
-            options =  list(range(1, number_of_states + 1))
-            return (options[pres_val - STATETEXT_OFFSET])
+        elif (
+            number_of_states := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .numberOfStates
+        ):
+            options = list(range(1, number_of_states + 1))
+            return options[pres_val - STATETEXT_OFFSET]
         else:
             return pres_val
 
@@ -174,16 +214,20 @@ class MultiStateOutputEntity(
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
-        
-        if (self.coordinator.data.devices[self.deviceid].objects[self.objectid].stateText):
+
+        if (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .stateText
+        ):
             pres_val = str(
-                    self.coordinator.data.devices[self.deviceid]
-                    .objects[self.objectid]
-                    .stateText.index(option)
-                    + STATETEXT_OFFSET  # JCO
-                )
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .stateText.index(option)
+                + STATETEXT_OFFSET  # JCO
+            )
         else:
-            pres_val = int(option)    
+            pres_val = int(option)
 
         await self.coordinator.interface.write_property(
             deviceid=self.deviceid,
@@ -238,23 +282,45 @@ class MultiStateValueEntity(
 
     @property
     def options(self) -> list:
-        if (state_text := self.coordinator.data.devices[self.deviceid].objects[self.objectid].stateText):
+        if (
+            state_text := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .stateText
+        ):
             return state_text
-        elif (number_of_states := self.coordinator.data.devices[self.deviceid].objects[self.objectid].numberOfStates):
+        elif (
+            number_of_states := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .numberOfStates
+        ):
             return list(range(1, number_of_states + 1))
         else:
-            LOGGER.error(f"{self.deviceid} {self.objectid} is missing REQUIRED stateText property!")
-            return None
+            LOGGER.error(
+                f"{self.deviceid} {self.objectid} is missing REQUIRED stateText property!"
+            )
+            return []
 
     @property
     def current_option(self) -> str:
-        pres_val = self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue
-        
-        if (state_text := self.coordinator.data.devices[self.deviceid].objects[self.objectid].stateText):
+        pres_val = (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
+        )
+
+        if (
+            state_text := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .stateText
+        ):
             return state_text[pres_val - STATETEXT_OFFSET]
-        elif (number_of_states := self.coordinator.data.devices[self.deviceid].objects[self.objectid].numberOfStates):
-            options =  list(range(1, number_of_states + 1))
-            return (options[pres_val - STATETEXT_OFFSET])
+        elif (
+            number_of_states := self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .numberOfStates
+        ):
+            options = list(range(1, number_of_states + 1))
+            return options[pres_val - STATETEXT_OFFSET]
         else:
             return pres_val
 
@@ -298,16 +364,20 @@ class MultiStateValueEntity(
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
-        
-        if (self.coordinator.data.devices[self.deviceid].objects[self.objectid].stateText):
+
+        if (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .stateText
+        ):
             pres_val = str(
-                    self.coordinator.data.devices[self.deviceid]
-                    .objects[self.objectid]
-                    .stateText.index(option)
-                    + STATETEXT_OFFSET  # JCO
-                )
+                self.coordinator.data.devices[self.deviceid]
+                .objects[self.objectid]
+                .stateText.index(option)
+                + STATETEXT_OFFSET  # JCO
+            )
         else:
-            pres_val = int(option)    
+            pres_val = int(option)
 
         await self.coordinator.interface.write_property(
             deviceid=self.deviceid,

@@ -41,7 +41,7 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
             name=DOMAIN,
             update_interval=SCAN_INTERVAL,
         )
-        
+
     @callback
     def _use_websocket(self) -> None:
         """Use websockets for updating"""
@@ -53,14 +53,12 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
             elif data.devices is None:
                 LOGGER.warning(f"Received data.devices is NoneType!")
             else:
-                LOGGER.debug(f"set updated data: {data.devices}")
                 self.async_set_updated_data(data)
 
         async def listen() -> None:
             """Listen for state changes through websocket"""
             try:
                 # Connect to websocket
-                LOGGER.debug("Connecting websocket")
                 await self.interface.connect()
             except EcoPanelError as e:
                 self.logger.info(e)
@@ -70,14 +68,13 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
                     self.unsub = None
                     LOGGER.debug(f"Unsub after failing to connect")
                 return
-            
+
             LOGGER.debug("Connected websocket")
-            
+
             try:
                 # This will stay running in the background.
                 # It calls DataUpdateCoordinator.async_set_updated_data when a message is received on the websocket.
                 # The data will then be accessable on coordinator.data where coordinator is the variable name of EcoPanelDataUpdateCoordinator.
-                LOGGER.debug("Listening to websocket")
                 await self.interface.listen(callback=check_data)
 
             except EcoPanelConnectionClosed as err:
@@ -91,7 +88,7 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
                 self.last_update_success = False
                 self.async_update_listeners()
                 self.logger.error(err)
-            
+
             LOGGER.debug("Disconnecting websocket after listening")
 
             # Make sure we are disconnected
@@ -99,16 +96,11 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
             if self.unsub:
                 self.unsub()
                 self.unsub = None
-                LOGGER.debug("Unsubbed")
 
         async def close_websocket(_: Event) -> None:
             """Close WebSocket connection."""
             LOGGER.debug("close_websocket")
             self.unsub = None
-            if self.interface._client:
-                LOGGER.debug("Has client")
-            if self.interface.connect:
-                LOGGER.debug("Is connected")
             await self.interface.disconnect()
 
         LOGGER.debug("Set unsub listener")
@@ -118,8 +110,6 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
             EVENT_HOMEASSISTANT_STOP, close_websocket
         )
 
-        LOGGER.debug("Create listen task...")
-
         # Start listening
         self.config_entry.async_create_background_task(
             self.hass, listen(), "bacnet-listen"
@@ -127,28 +117,13 @@ class EcoPanelDataUpdateCoordinator(DataUpdateCoordinator[DeviceDict]):
 
     async def _async_update_data(self) -> DeviceDict:
         try:
-            LOGGER.debug("Async update data")
             devicedict = await self.interface.update(
                 full_update=not self.last_update_success
             )
         except (EcoPanelError, DeviceDictError) as error:
             raise UpdateFailed(f"Invalid response from API: {error}") from error
 
-        if devicedict is not None:
-            LOGGER.debug(f"devicedict not None")
-
-        if not self.interface.connect:
-            LOGGER.debug(f"interface not connected yet")
-            
-        if not self.unsub:
-            LOGGER.debug(f"No unsub yet")
-
         if devicedict is not None and not self.interface.connected and not self.unsub:
-            LOGGER.debug("Use websocket")
             self._use_websocket()
-            
-        if self.last_update_success:
-            LOGGER.debug(f"Last update was a success")
 
-        LOGGER.debug(f"return devicedict: {devicedict.devices}")
         return devicedict
