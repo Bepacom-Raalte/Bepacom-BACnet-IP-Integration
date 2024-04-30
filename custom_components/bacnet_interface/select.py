@@ -143,12 +143,13 @@ class MultiStateOutputEntity(
             .objects[self.objectid]
             .numberOfStates
         ):
-            return list(range(1, number_of_states + 1))
+            return [str(i) for i in range(1, number_of_states + 1)]
+        
         else:
             LOGGER.error(
-                f"{self.deviceid} {self.objectid} is missing REQUIRED stateText property!"
+                f"{self.deviceid} {self.objectid} is missing REQUIRED numberOfStates property!"
             )
-            return None
+            return []
 
     @property
     def current_option(self) -> str:
@@ -169,10 +170,10 @@ class MultiStateOutputEntity(
             .objects[self.objectid]
             .numberOfStates
         ):
-            options = list(range(1, number_of_states + 1))
+            options = [str(i) for i in range(1, number_of_states + 1)]
             return options[pres_val - STATETEXT_OFFSET]
         else:
-            return pres_val
+            return str(pres_val)
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -293,10 +294,11 @@ class MultiStateValueEntity(
             .objects[self.objectid]
             .numberOfStates
         ):
-            return list(range(1, number_of_states + 1))
+            return [str(i) for i in range(1, number_of_states + 1)]
+        
         else:
             LOGGER.error(
-                f"{self.deviceid} {self.objectid} is missing REQUIRED stateText property!"
+                f"{self.deviceid} {self.objectid} is missing REQUIRED numberOfStates property!"
             )
             return []
 
@@ -319,10 +321,10 @@ class MultiStateValueEntity(
             .objects[self.objectid]
             .numberOfStates
         ):
-            options = list(range(1, number_of_states + 1))
+            options = [str(i) for i in range(1, number_of_states + 1)]
             return options[pres_val - STATETEXT_OFFSET]
         else:
-            return pres_val
+            return str(pres_val)
 
     @property
     def device_info(self) -> DeviceInfo:
