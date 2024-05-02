@@ -137,8 +137,10 @@ class MultiStateOutputEntity(
             .objects[self.objectid]
             .stateText
         ):
-            return state_text
-        elif (
+            if any(state_text):
+                return state_text
+            
+        if (
             number_of_states := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .numberOfStates
@@ -164,8 +166,9 @@ class MultiStateOutputEntity(
             .objects[self.objectid]
             .stateText
         ):
-            return state_text[pres_val - STATETEXT_OFFSET]
-        elif (
+            if any(state_text):
+                return state_text[pres_val - STATETEXT_OFFSET]
+        if (
             number_of_states := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .numberOfStates
@@ -216,26 +219,13 @@ class MultiStateOutputEntity(
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
 
-        if (
-            self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .stateText
-        ):
-            pres_val = str(
-                self.coordinator.data.devices[self.deviceid]
-                .objects[self.objectid]
-                .stateText.index(option)
-                + STATETEXT_OFFSET  # JCO
-            )
-        else:
-            pres_val = int(option)
+        pres_val = self.options.index(option) + STATETEXT_OFFSET
 
         await self.coordinator.interface.write_property(
             deviceid=self.deviceid,
             objectid=self.objectid,
             presentValue=pres_val,
         )
-
 
 class MultiStateValueEntity(
     CoordinatorEntity[EcoPanelDataUpdateCoordinator], SelectEntity
@@ -288,8 +278,10 @@ class MultiStateValueEntity(
             .objects[self.objectid]
             .stateText
         ):
-            return state_text
-        elif (
+            if any(state_text):
+                return state_text
+            
+        if (
             number_of_states := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .numberOfStates
@@ -315,8 +307,9 @@ class MultiStateValueEntity(
             .objects[self.objectid]
             .stateText
         ):
-            return state_text[pres_val - STATETEXT_OFFSET]
-        elif (
+            if any(state_text):
+                return state_text[pres_val - STATETEXT_OFFSET]
+        if (
             number_of_states := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .numberOfStates
@@ -367,19 +360,7 @@ class MultiStateValueEntity(
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
 
-        if (
-            self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .stateText
-        ):
-            pres_val = str(
-                self.coordinator.data.devices[self.deviceid]
-                .objects[self.objectid]
-                .stateText.index(option)
-                + STATETEXT_OFFSET  # JCO
-            )
-        else:
-            pres_val = int(option)
+        pres_val = self.options.index(option) + STATETEXT_OFFSET
 
         await self.coordinator.interface.write_property(
             deviceid=self.deviceid,
