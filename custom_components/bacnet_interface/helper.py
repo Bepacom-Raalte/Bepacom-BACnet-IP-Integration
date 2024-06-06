@@ -1,5 +1,6 @@
 """Helper functions for the integration"""
 
+import math
 import string
 from logging import BASIC_FORMAT
 
@@ -522,7 +523,7 @@ def bacnet_to_ha_units(unit_in: str | None) -> str | None:
         case "wattHoursReactive":
             return None
         case "watts":
-            return UnitOfPower.BTU
+            return UnitOfPower.WATT
         case "wattsPerMeterPerDegreeKelvin":
             return None
         case "wattsPerSquareFoot":
@@ -549,3 +550,15 @@ def bacnet_to_device_class(unit_in: str | None, device_class_units: dict) -> str
                 return classes
     else:
         return None
+
+def decimal_places_needed(resolution: float) -> int:
+    if resolution <= 0:
+        raise ValueError("Resolution must be greater than 0")
+    
+    # Take the base-10 logarithm of the resolution
+    log10_value = -math.log10(resolution)
+    
+    # Take the ceiling of the logarithm value
+    decimal_places = math.ceil(log10_value)
+    
+    return decimal_places

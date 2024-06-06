@@ -20,7 +20,7 @@ from homeassistant.util.dt import utcnow
 from .const import STATETEXT_OFFSET  # JCO
 from .const import DOMAIN, LOGGER
 from .coordinator import EcoPanelDataUpdateCoordinator
-from .helper import bacnet_to_device_class, bacnet_to_ha_units
+from .helper import bacnet_to_device_class, bacnet_to_ha_units, decimal_places_needed
 
 
 async def async_setup_entry(
@@ -126,7 +126,7 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
         ):
             if resolution >= 1:
                 return int(value)
-            resolution = int(-1 * log10(resolution))
+            resolution = decimal_places_needed(resolution)
             return round(value, resolution)
         elif (
             covIncrement := self.coordinator.data.devices[self.deviceid]
@@ -135,7 +135,7 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
         ):
             if covIncrement >= 1:
                 return int(value)
-            covIncrement = int(-1 * log10(covIncrement))
+            covIncrement = decimal_places_needed(covIncrement)
             return round(value, covIncrement)
 
         return round(value, 1)
