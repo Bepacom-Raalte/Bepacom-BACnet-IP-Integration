@@ -62,6 +62,32 @@
           "description": "De BACnet prioriteit waarmee geschreven moet worden."
         }
       }
+    },
+    "write_property": {
+      "name": "Schrijf property",
+      "description": "Schrijf een property van een BACnet object dat gerepresenteerd wordt door een entity.",
+      "fields": {
+        "entity_id": {
+          "name": "Entiteit",
+          "description": "Naam van een entiteit dat het BACnet object representateert."
+        },
+        "priority": {
+          "name": "Prioriteit",
+          "description": "De BACnet prioriteit waarmee geschreven moet worden."
+        },
+        "property": {
+          "name": "Property",
+          "description": "De BACnet property waarnaar geschreven moet worden."
+        },
+        "value": {
+          "name": "Waarde",
+          "description": "De waarde wat naar de BACnet property geschreven met worden."
+        },
+        "array_index": {
+          "name": "Array index",
+          "description": "De index voor de array waarnaar geschreven wordt. Meestal moet je deze niet gebruiken."
+        }
+      }
     }
   }
 }

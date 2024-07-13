@@ -62,6 +62,32 @@
           "description": "The BACnet priority the empty write request has to be written with."
         }
       }
+    },
+    "write_property": {
+      "name": "Write property",
+      "description": "Write any property of an BACnet object represented by an entity.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity",
+          "description": "Name of entity that represents the object to write to."
+        },
+        "priority": {
+          "name": "Priority",
+          "description": "The BACnet priority the empty write request has to be written with."
+        },
+        "property": {
+          "name": "Property",
+          "description": "The BACnet property the write request has to be written to."
+        },
+        "value": {
+          "name": "Value",
+          "description": "The value the BACnet property has to be set to."
+        },
+        "array_index": {
+          "name": "Array index",
+          "description": "The array index to be written to. Usually left empty."
+        }
+      }
     }
   }
 }

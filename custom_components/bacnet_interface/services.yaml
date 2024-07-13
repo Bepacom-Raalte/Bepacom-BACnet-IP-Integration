@@ -15,3 +15,33 @@ write_release:
             - number
             - select
             - switch
+write_property:
+  fields:
+    property:
+      default: presentValue
+      selector:
+        text:
+    value:
+      selector:
+        text:
+    priority:
+      default: 15
+      selector:
+        number:
+          min: 0
+          max: 16
+          mode: box
+    array_index:
+      selector:
+        number:
+          min: 0
+          max: 16
+          mode: box
+    entity_id:
+      selector:
+        entity:
+          integration: bacnet_interface
+          domain:
+            - number
+            - select
+            - switch

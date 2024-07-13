@@ -15,7 +15,7 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.device_registry import DeviceEntry, async_get
 from homeassistant.util.json import JsonObjectType
 
-from .const import DOMAIN, LOGGER
+from .const import DOMAIN, LOGGER, WRITE_PROPERTY_SERVICE_NAME, WRITE_RELEASE_SERVICE_NAME, ATTR_PRIORITY, ATTR_PROPERTY, ATTR_VALUE, ATTR_INDEX, WRITE_RELEASE_SCHEMA, WRITE_PROPERTY_SCHEMA
 from .coordinator import EcoPanelDataUpdateCoordinator
 
 # List of platforms to support. There should be a matching .py file for each,
@@ -27,16 +27,6 @@ PLATFORMS: list[str] = [
     "switch",
     "select",
 ]
-
-WRITE_RELEASE_SERVICE_NAME = "write_release"
-ATTR_PRIORITY = "priority"
-WRITE_RELEASE_SCHEMA = vol.Schema(
-    {
-        vol.Required(ATTR_ENTITY_ID): cv.entity_ids,
-        vol.Optional(ATTR_PRIORITY): int,
-    }
-)
-
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up EcoPanel BACnet/IP interface from a config entry."""
@@ -82,12 +72,46 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
 
         return {"status": "successfull!"}
+    
+    async def write_property(call: ServiceCall) -> ServiceResponse:
+        """Write property with value to an object."""
+
+        entity_registry = er.async_get(hass)
+
+        entity_data = entity_registry.async_get(call.data[ATTR_ENTITY_ID][0])
+
+        device_id, object_id = entity_data.unique_id.split("_")
+
+        if priority := call.data.get(ATTR_PRIORITY):
+            pass
+            
+        if property_id := call.data.get(ATTR_PROPERTY):
+            pass
+        
+        if value := call.data.get(ATTR_VALUE):
+            pass
+
+        if array_index := call.data.get(ATTR_INDEX):
+            pass
+
+        await coordinator.interface.write_property_v2(
+                    deviceid=device_id ,objectid=object_id ,propertyid=property_id ,value=value ,array_index=array_index ,priority=priority
+        )
+
+        return {"status": "successfull!"}
 
     hass.services.async_register(
         DOMAIN,
         WRITE_RELEASE_SERVICE_NAME,
         write_release,
         schema=WRITE_RELEASE_SCHEMA,
+        supports_response=SupportsResponse.OPTIONAL,
+    )
+    hass.services.async_register(
+        DOMAIN,
+        WRITE_PROPERTY_SERVICE_NAME,
+        write_property,
+        schema=WRITE_PROPERTY_SCHEMA,
         supports_response=SupportsResponse.OPTIONAL,
     )
 
