@@ -14,6 +14,35 @@
       "hassio_confirm": {
         "title": "Bepacom BACnet/IP Interface via Home Assistant add-on",
         "description": "Wil je Home Assistant configureren om te verbinden met Bepacom BACnet/IP Interface door middel van: {addon}?"
+      },
+      "host": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Voer het IP adres en de poort van de BACnet/IP add-on in.",
+        "data": {
+          "host": "IP-adres",
+          "port": "Poort"
+        }
+      },
+      "naming": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Specificeer waar de entity benaming op gebaseerd moet worden.",
+        "data": {
+          "name": "Entity naam gebaseerd op:",
+          "enabled": "Entity standaard ingeschakeld",
+          "customize": "Geavanceerde instellingen"
+        }
+      },
+      "writing": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Specificeer welke property geschreven moet worden voor het wijzigen van waardes.",
+        "data": {
+          "analog_output": "Analog Output",
+          "analog_value": "Analog Value",
+          "binary_output": "Binary Output",
+          "binary_value": "Binary Value",
+          "multistate_output": "Multi State Output",
+          "multistate_value": "Multi State Value"
+        }
       }
     },
     "error": {
@@ -29,14 +58,50 @@
     "step": {
       "init": {
         "title": "Bepacom BACnet/IP Interface",
+        "description": "Specify the BACnet/IP add-on IP-address and port.",
+        "data": {
+          "host": "IP address",
+          "port": "Port",
+          "enabled": "Entity enabled by default",
+          "name": "Entity name based on:"
+        }
+      },
+      "host": {
+        "title": "Bepacom BACnet/IP Interface",
         "description": "Voer het IP adres en de poort van de BACnet/IP add-on in.",
         "data": {
           "host": "IP-adres",
-          "port": "Poort",
-          "enabled": "Entity standaard ingeschakeld",
-          "name": "Entity naam gebaseerd op:"
+          "port": "Poort"
+        }
+      },
+      "naming": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Specificeer waar de entity benaming op gebaseerd moet worden.",
+        "data": {
+          "name": "Entity naam gebaseerd op:",
+          "customize": "Geavanceerde instellingen"
+        }
+      },
+      "writing": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Specificeer welke property geschreven moet worden voor het wijzigen van waardes.",
+        "data": {
+          "analog_output": "Analog Output",
+          "analog_value": "Analog Value",
+          "binary_output": "Binary Output",
+          "binary_value": "Binary Value",
+          "multistate_output": "Multi State Output",
+          "multistate_value": "Multi State Value"
         }
       }
+    },
+    "error": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_service%]",
+      "cannot_connect": "Kan niet verbinden met de add-on.",
+      "empty_response": "Lege reactie van de add-on. Zit de add-on op het juiste netwerk?"
+    },
+    "abort": {
+      "single_instance_allowed": "Er is maar één instantie van deze integration nodig!"
     }
   },
   "selector": {
@@ -45,6 +110,12 @@
         "object_name": "Object naam",
         "description": "'Description' BACnet eigenschap",
         "object_identifier": "'Object identifier' BACnet eigenschap"
+      }
+    },
+    "write_options": {
+      "options": {
+        "presentValue": "Present Value",
+        "relinquishDefault": "Relinquish Default"
       }
     }
   },

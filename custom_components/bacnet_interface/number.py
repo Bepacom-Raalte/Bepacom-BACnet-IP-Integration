@@ -18,7 +18,7 @@ from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.dt import utcnow
 
-from .const import DOMAIN, LOGGER
+from .const import CONF_ANALOG_OUTPUT, CONF_ANALOG_VALUE, DOMAIN, LOGGER
 from .coordinator import EcoPanelDataUpdateCoordinator
 from .helper import bacnet_to_device_class, bacnet_to_ha_units
 
@@ -155,8 +155,8 @@ class AnalogOutputEntity(
             .presentValue
         )
 
-        if self.native_step >= 1:
-            return int(value)
+        # if self.native_step >= 1:
+        #    return int(value)
 
         return value
 
@@ -252,8 +252,16 @@ class AnalogOutputEntity(
 
     async def async_set_native_value(self, value: float) -> None:
         """Set analogOutput object to active."""
-        await self.coordinator.interface.write_property(
-            deviceid=self.deviceid, objectid=self.objectid, presentValue=value
+
+        await self.coordinator.interface.write_property_v2(
+            deviceid=self.deviceid,
+            objectid=self.objectid,
+            propertyid=self.coordinator.config_entry.data.get(
+                CONF_ANALOG_VALUE, "presentValue"
+            ),
+            value=value,
+            array_index=None,
+            priority=None,
         )
 
 
@@ -336,8 +344,8 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
             .presentValue
         )
 
-        if self.native_step >= 1:
-            return int(value)
+        # if self.native_step >= 1:
+        #    return int(value)
 
         return value
 
@@ -432,7 +440,14 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
         )
 
     async def async_set_native_value(self, value: float) -> None:
-        """Set analogOutput object to active."""
-        await self.coordinator.interface.write_property(
-            deviceid=self.deviceid, objectid=self.objectid, presentValue=value
+        """Set analogValue object to active."""
+        await self.coordinator.interface.write_property_v2(
+            deviceid=self.deviceid,
+            objectid=self.objectid,
+            propertyid=self.coordinator.config_entry.data.get(
+                CONF_ANALOG_VALUE, "presentValue"
+            ),
+            value=value,
+            array_index=None,
+            priority=None,
         )

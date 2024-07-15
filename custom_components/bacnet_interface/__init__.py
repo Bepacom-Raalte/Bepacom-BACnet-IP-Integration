@@ -15,7 +15,10 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.device_registry import DeviceEntry, async_get
 from homeassistant.util.json import JsonObjectType
 
-from .const import DOMAIN, LOGGER, WRITE_PROPERTY_SERVICE_NAME, WRITE_RELEASE_SERVICE_NAME, ATTR_PRIORITY, ATTR_PROPERTY, ATTR_VALUE, ATTR_INDEX, WRITE_RELEASE_SCHEMA, WRITE_PROPERTY_SCHEMA
+from .const import (ATTR_INDEX, ATTR_PRIORITY, ATTR_PROPERTY, ATTR_VALUE,
+                    DOMAIN, LOGGER, WRITE_PROPERTY_SCHEMA,
+                    WRITE_PROPERTY_SERVICE_NAME, WRITE_RELEASE_SCHEMA,
+                    WRITE_RELEASE_SERVICE_NAME)
 from .coordinator import EcoPanelDataUpdateCoordinator
 
 # List of platforms to support. There should be a matching .py file for each,
@@ -27,6 +30,7 @@ PLATFORMS: list[str] = [
     "switch",
     "select",
 ]
+
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up EcoPanel BACnet/IP interface from a config entry."""
@@ -72,7 +76,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
 
         return {"status": "successfull!"}
-    
+
     async def write_property(call: ServiceCall) -> ServiceResponse:
         """Write property with value to an object."""
 
@@ -84,10 +88,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
         if priority := call.data.get(ATTR_PRIORITY):
             pass
-            
+
         if property_id := call.data.get(ATTR_PROPERTY):
             pass
-        
+
         if value := call.data.get(ATTR_VALUE):
             pass
 
@@ -95,7 +99,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             pass
 
         await coordinator.interface.write_property_v2(
-                    deviceid=device_id ,objectid=object_id ,propertyid=property_id ,value=value ,array_index=array_index ,priority=priority
+            deviceid=device_id,
+            objectid=object_id,
+            propertyid=property_id,
+            value=value,
+            array_index=array_index,
+            priority=priority,
         )
 
         return {"status": "successfull!"}

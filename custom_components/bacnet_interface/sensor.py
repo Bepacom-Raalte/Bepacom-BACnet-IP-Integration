@@ -20,7 +20,8 @@ from homeassistant.util.dt import utcnow
 from .const import STATETEXT_OFFSET  # JCO
 from .const import DOMAIN, LOGGER
 from .coordinator import EcoPanelDataUpdateCoordinator
-from .helper import bacnet_to_device_class, bacnet_to_ha_units, decimal_places_needed
+from .helper import (bacnet_to_device_class, bacnet_to_ha_units,
+                     decimal_places_needed)
 
 
 async def async_setup_entry(

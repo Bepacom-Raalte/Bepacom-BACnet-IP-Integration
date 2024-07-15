@@ -13,7 +13,7 @@ from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.dt import utcnow
 
-from .const import DOMAIN, LOGGER
+from .const import CONF_BINARY_OUTPUT, CONF_BINARY_VALUE, DOMAIN, LOGGER
 from .coordinator import EcoPanelDataUpdateCoordinator
 
 
@@ -169,14 +169,28 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Set BinaryValue object to active"""
-        await self.coordinator.interface.write_property(
-            deviceid=self.deviceid, objectid=self.objectid, presentValue="1"
+        await self.coordinator.interface.write_property_v2(
+            deviceid=self.deviceid,
+            objectid=self.objectid,
+            propertyid=self.coordinator.config_entry.data.get(
+                CONF_BINARY_VALUE, "presentValue"
+            ),
+            value=True,
+            array_index=None,
+            priority=None,
         )
 
     async def async_turn_off(self):
         """Set BinaryValue object to active."""
-        await self.coordinator.interface.write_property(
-            deviceid=self.deviceid, objectid=self.objectid, presentValue="0"
+        await self.coordinator.interface.write_property_v2(
+            deviceid=self.deviceid,
+            objectid=self.objectid,
+            propertyid=self.coordinator.config_entry.data.get(
+                CONF_BINARY_VALUE, "presentValue"
+            ),
+            value=False,
+            array_index=None,
+            priority=None,
         )
 
 
@@ -288,13 +302,27 @@ class BinaryOutputEntity(
         }
 
     async def async_turn_on(self, **kwargs: Any) -> None:
-        """Set BinaryValue object to active"""
-        await self.coordinator.interface.write_property(
-            deviceid=self.deviceid, objectid=self.objectid, presentValue="1"
+        """Set BinaryOutput object to active"""
+        await self.coordinator.interface.write_property_v2(
+            deviceid=self.deviceid,
+            objectid=self.objectid,
+            propertyid=self.coordinator.config_entry.data.get(
+                CONF_BINARY_OUTPUT, "presentValue"
+            ),
+            value=True,
+            array_index=None,
+            priority=None,
         )
 
     async def async_turn_off(self):
-        """Set BinaryValue object to active."""
-        await self.coordinator.interface.write_property(
-            deviceid=self.deviceid, objectid=self.objectid, presentValue="0"
+        """Set BinaryOutput object to active."""
+        await self.coordinator.interface.write_property_v2(
+            deviceid=self.deviceid,
+            objectid=self.objectid,
+            propertyid=self.coordinator.config_entry.data.get(
+                CONF_BINARY_OUTPUT, "presentValue"
+            ),
+            value=False,
+            array_index=None,
+            priority=None,
         )

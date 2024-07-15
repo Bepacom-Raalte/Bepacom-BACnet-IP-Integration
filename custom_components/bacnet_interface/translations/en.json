@@ -14,6 +14,35 @@
       "hassio_confirm": {
         "title": "Bepacom BACnet/IP Interface via Home Assistant add-on",
         "description": "Do you want to configure Home Assistant to connect to the Bepacom BACnet/IP Interface provided by the add-on: {addon}?"
+      },
+      "host": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Specify the BACnet/IP add-on IP-address and port.",
+        "data": {
+          "host": "IP address",
+          "port": "Port"
+        }
+      },
+      "naming": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Specify what property the entity naming should be based on.",
+        "data": {
+          "name": "Entity name based on:",
+          "enabled": "Entity enabled by default",
+          "customize": "Enable advanced customisation"
+        }
+      },
+      "writing": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Specify the BACnet property written to when changing a value.",
+        "data": {
+          "analog_output": "Analog Output",
+          "analog_value": "Analog Value",
+          "binary_output": "Binary Output",
+          "binary_value": "Binary Value",
+          "multistate_output": "Multi State Output",
+          "multistate_value": "Multi State Value"
+        }
       }
     },
     "error": {
@@ -36,7 +65,43 @@
           "enabled": "Entity enabled by default",
           "name": "Entity name based on:"
         }
+      },
+      "host": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Specify the BACnet/IP add-on IP-address and port.",
+        "data": {
+          "host": "IP address",
+          "port": "Port"
+        }
+      },
+      "naming": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Specify what property the entity naming should be based on.",
+        "data": {
+          "name": "Entity name based on:",
+          "customize": "Enable advanced customisation"
+        }
+      },
+      "writing": {
+        "title": "Bepacom BACnet/IP Interface",
+        "description": "Specify the BACnet property written to when changing a value.",
+        "data": {
+          "analog_output": "Analog Output",
+          "analog_value": "Analog Value",
+          "binary_output": "Binary Output",
+          "binary_value": "Binary Value",
+          "multistate_output": "Multi State Output",
+          "multistate_value": "Multi State Value"
+        }
       }
+    },
+    "error": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_service%]",
+      "cannot_connect": "Can't connect to the add-on.",
+      "empty_response": "Empty response from the add-on. Is the add-on on the right network?"
+    },
+    "abort": {
+      "single_instance_allowed": "Only one instance of this integration is allowed!"
     }
   },
   "selector": {
@@ -45,6 +110,12 @@
         "object_name": "Object name",
         "description": "Description BACnet property",
         "object_identifier": "Object identifier property"
+      }
+    },
+    "write_options": {
+      "options": {
+        "presentValue": "Present Value",
+        "relinquishDefault": "Relinquish Default"
       }
     }
   },

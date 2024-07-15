@@ -14,7 +14,8 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.dt import utcnow
 
 from .const import STATETEXT_OFFSET  # JCO
-from .const import DOMAIN, LOGGER
+from .const import (CONF_MULTISTATE_OUTPUT, CONF_MULTISTATE_VALUE, DOMAIN,
+                    LOGGER)
 from .coordinator import EcoPanelDataUpdateCoordinator
 
 
@@ -139,14 +140,14 @@ class MultiStateOutputEntity(
         ):
             if any(state_text):
                 return state_text
-            
+
         if (
             number_of_states := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .numberOfStates
         ):
             return [str(i) for i in range(1, number_of_states + 1)]
-        
+
         else:
             LOGGER.error(
                 f"{self.deviceid} {self.objectid} is missing REQUIRED numberOfStates property!"
@@ -155,7 +156,7 @@ class MultiStateOutputEntity(
 
     @property
     def current_option(self) -> str:
-        pres_val = (
+        pres_val = int(
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .presentValue
@@ -221,11 +222,17 @@ class MultiStateOutputEntity(
 
         pres_val = self.options.index(option) + STATETEXT_OFFSET
 
-        await self.coordinator.interface.write_property(
+        await self.coordinator.interface.write_property_v2(
             deviceid=self.deviceid,
             objectid=self.objectid,
-            presentValue=pres_val,
+            propertyid=self.coordinator.config_entry.data.get(
+                CONF_MULTISTATE_OUTPUT, "presentValue"
+            ),
+            value=pres_val,
+            array_index=None,
+            priority=None,
         )
+
 
 class MultiStateValueEntity(
     CoordinatorEntity[EcoPanelDataUpdateCoordinator], SelectEntity
@@ -280,14 +287,14 @@ class MultiStateValueEntity(
         ):
             if any(state_text):
                 return state_text
-            
+
         if (
             number_of_states := self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .numberOfStates
         ):
             return [str(i) for i in range(1, number_of_states + 1)]
-        
+
         else:
             LOGGER.error(
                 f"{self.deviceid} {self.objectid} is missing REQUIRED numberOfStates property!"
@@ -296,7 +303,7 @@ class MultiStateValueEntity(
 
     @property
     def current_option(self) -> str:
-        pres_val = (
+        pres_val = int(
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .presentValue
@@ -362,8 +369,13 @@ class MultiStateValueEntity(
 
         pres_val = self.options.index(option) + STATETEXT_OFFSET
 
-        await self.coordinator.interface.write_property(
+        await self.coordinator.interface.write_property_v2(
             deviceid=self.deviceid,
             objectid=self.objectid,
-            presentValue=pres_val,
+            propertyid=self.coordinator.config_entry.data.get(
+                CONF_MULTISTATE_VALUE, "presentValue"
+            ),
+            value=pres_val,
+            array_index=None,
+            priority=None,
         )
