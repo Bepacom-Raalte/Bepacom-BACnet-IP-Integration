@@ -102,28 +102,18 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
 
     @property
     def is_on(self) -> bool:
-        if (
-            self.coordinator.data.devices[self.deviceid]
+        pres_val = self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue
+        
+        if isinstance(pres_val, str):
+            return pres_val in {"active", "1"}
+        elif isinstance(pres_val, int):
+            return pres_val == 1
+        elif isinstance(pres_val, bool):
+            return pres_val
+        else:
+            self.coordinator.logger.debug(f"Unknown type for: {self.objectid} {self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .presentValue
-            == "active"
-            or self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .presentValue
-            == 1
-        ):
-            return True
-        elif (
-            self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .presentValue
-            == "inactive"
-            or self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .presentValue
-            == 0
-        ):
-            return False
+            .presentValue}")
 
     @property
     def icon(self):
@@ -175,7 +165,7 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
             propertyid=self.coordinator.config_entry.data.get(
                 CONF_BINARY_VALUE, "presentValue"
             ),
-            value=True,
+            value=1,
             array_index=None,
             priority=None,
         )
@@ -188,7 +178,7 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
             propertyid=self.coordinator.config_entry.data.get(
                 CONF_BINARY_VALUE, "presentValue"
             ),
-            value=False,
+            value=0,
             array_index=None,
             priority=None,
         )
@@ -236,28 +226,19 @@ class BinaryOutputEntity(
 
     @property
     def is_on(self) -> bool:
-        if (
-            self.coordinator.data.devices[self.deviceid]
+        
+        pres_val = self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue
+        
+        if isinstance(pres_val, str):
+            return pres_val in {"active", "1"}
+        elif isinstance(pres_val, int):
+            return pres_val == 1
+        elif isinstance(pres_val, bool):
+            return pres_val
+        else:
+            self.coordinator.logger.debug(f"Unknown type for: {self.objectid} {self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .presentValue
-            == "active"
-            or self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .presentValue
-            == 1
-        ):
-            return True
-        elif (
-            self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .presentValue
-            == "inactive"
-            or self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .presentValue
-            == 0
-        ):
-            return False
+            .presentValue}")
 
     @property
     def icon(self):
@@ -309,7 +290,7 @@ class BinaryOutputEntity(
             propertyid=self.coordinator.config_entry.data.get(
                 CONF_BINARY_OUTPUT, "presentValue"
             ),
-            value=True,
+            value=1,
             array_index=None,
             priority=None,
         )
@@ -322,7 +303,7 @@ class BinaryOutputEntity(
             propertyid=self.coordinator.config_entry.data.get(
                 CONF_BINARY_OUTPUT, "presentValue"
             ),
-            value=False,
+            value=0,
             array_index=None,
             priority=None,
         )
