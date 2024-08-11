@@ -30,6 +30,16 @@ from homeassistant.const import (AREA_SQUARE_METERS,
 from .const import LOGGER
 
 
+def key_to_property(key: str | None) -> str | None:
+    match key:
+        case "present_value" | "presentValue":
+            return "presentValue"
+        case "relinquish_default" | "relinquishDefault":
+            return "relinquishDefault"
+        case _:
+            return None
+
+
 def bacnet_to_ha_units(unit_in: str | None) -> str | None:
     match unit_in:
         case "amperes":
@@ -551,14 +561,15 @@ def bacnet_to_device_class(unit_in: str | None, device_class_units: dict) -> str
     else:
         return None
 
+
 def decimal_places_needed(resolution: float) -> int:
     if resolution <= 0:
         raise ValueError("Resolution must be greater than 0")
-    
+
     # Take the base-10 logarithm of the resolution
     log10_value = -math.log10(resolution)
-    
+
     # Take the ceiling of the logarithm value
     decimal_places = math.ceil(log10_value)
-    
+
     return decimal_places

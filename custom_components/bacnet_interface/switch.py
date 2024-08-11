@@ -15,6 +15,7 @@ from homeassistant.util.dt import utcnow
 
 from .const import CONF_BINARY_OUTPUT, CONF_BINARY_VALUE, DOMAIN, LOGGER
 from .coordinator import EcoPanelDataUpdateCoordinator
+from .helper import key_to_property
 
 
 async def async_setup_entry(
@@ -102,8 +103,12 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
 
     @property
     def is_on(self) -> bool:
-        pres_val = self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue
-        
+        pres_val = (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
+        )
+
         if isinstance(pres_val, str):
             return pres_val in {"active", "1"}
         elif isinstance(pres_val, int):
@@ -111,9 +116,11 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
         elif isinstance(pres_val, bool):
             return pres_val
         else:
-            self.coordinator.logger.debug(f"Unknown type for: {self.objectid} {self.coordinator.data.devices[self.deviceid]
+            self.coordinator.logger.debug(
+                f"Unknown type for: {self.objectid} {self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .presentValue}")
+            .presentValue}"
+            )
 
     @property
     def icon(self):
@@ -159,12 +166,15 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Set BinaryValue object to active"""
+
+        propertyid = self.coordinator.config_entry.data.get(
+            CONF_BINARY_VALUE, "present_value"
+        )
+
         await self.coordinator.interface.write_property_v2(
             deviceid=self.deviceid,
             objectid=self.objectid,
-            propertyid=self.coordinator.config_entry.data.get(
-                CONF_BINARY_VALUE, "presentValue"
-            ),
+            propertyid=key_to_property(propertyid),
             value=1,
             array_index=None,
             priority=None,
@@ -172,12 +182,15 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
 
     async def async_turn_off(self):
         """Set BinaryValue object to active."""
+
+        propertyid = self.coordinator.config_entry.data.get(
+            CONF_BINARY_VALUE, "present_value"
+        )
+
         await self.coordinator.interface.write_property_v2(
             deviceid=self.deviceid,
             objectid=self.objectid,
-            propertyid=self.coordinator.config_entry.data.get(
-                CONF_BINARY_VALUE, "presentValue"
-            ),
+            propertyid=key_to_property(propertyid),
             value=0,
             array_index=None,
             priority=None,
@@ -226,9 +239,13 @@ class BinaryOutputEntity(
 
     @property
     def is_on(self) -> bool:
-        
-        pres_val = self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue
-        
+
+        pres_val = (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
+        )
+
         if isinstance(pres_val, str):
             return pres_val in {"active", "1"}
         elif isinstance(pres_val, int):
@@ -236,9 +253,11 @@ class BinaryOutputEntity(
         elif isinstance(pres_val, bool):
             return pres_val
         else:
-            self.coordinator.logger.debug(f"Unknown type for: {self.objectid} {self.coordinator.data.devices[self.deviceid]
+            self.coordinator.logger.debug(
+                f"Unknown type for: {self.objectid} {self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
-            .presentValue}")
+            .presentValue}"
+            )
 
     @property
     def icon(self):
@@ -284,12 +303,15 @@ class BinaryOutputEntity(
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Set BinaryOutput object to active"""
+
+        propertyid = self.coordinator.config_entry.data.get(
+            CONF_BINARY_OUTPUT, "present_value"
+        )
+
         await self.coordinator.interface.write_property_v2(
             deviceid=self.deviceid,
             objectid=self.objectid,
-            propertyid=self.coordinator.config_entry.data.get(
-                CONF_BINARY_OUTPUT, "presentValue"
-            ),
+            propertyid=key_to_property(propertyid),
             value=1,
             array_index=None,
             priority=None,
@@ -297,12 +319,15 @@ class BinaryOutputEntity(
 
     async def async_turn_off(self):
         """Set BinaryOutput object to active."""
+
+        propertyid = self.coordinator.config_entry.data.get(
+            CONF_BINARY_OUTPUT, "present_value"
+        )
+
         await self.coordinator.interface.write_property_v2(
             deviceid=self.deviceid,
             objectid=self.objectid,
-            propertyid=self.coordinator.config_entry.data.get(
-                CONF_BINARY_OUTPUT, "presentValue"
-            ),
+            propertyid=key_to_property(propertyid),
             value=0,
             array_index=None,
             priority=None,

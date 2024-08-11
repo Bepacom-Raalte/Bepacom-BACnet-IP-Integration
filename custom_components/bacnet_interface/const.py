@@ -1,4 +1,5 @@
 """Constants for the Bepacom BACnet/IP integration."""
+
 import logging
 from datetime import timedelta
 

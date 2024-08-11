@@ -1,4 +1,5 @@
 """The Bepacom EcoPanel BACnet/IP integration."""
+
 from __future__ import annotations
 
 from asyncio import sleep

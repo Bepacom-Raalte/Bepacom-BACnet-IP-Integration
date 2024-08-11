@@ -1,4 +1,5 @@
 """Config flow for Hello World integration."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -17,8 +18,8 @@ from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.selector import selector
 
-from .const import (CONF_ANALOG_OUTPUT,  # pylint:disable=unused-import
-                    CONF_ANALOG_VALUE, CONF_BINARY_OUTPUT, CONF_BINARY_VALUE,
+from .const import CONF_ANALOG_OUTPUT  # pylint:disable=unused-import
+from .const import (CONF_ANALOG_VALUE, CONF_BINARY_OUTPUT, CONF_BINARY_VALUE,
                     CONF_MULTISTATE_OUTPUT, CONF_MULTISTATE_VALUE, DOMAIN,
                     LOGGER, NAME_OPTIONS, WRITE_OPTIONS)
 
@@ -185,7 +186,7 @@ class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
                         CONF_ANALOG_OUTPUT,
                         description={
                             "suggested_value": self.options.get(
-                                CONF_ANALOG_OUTPUT, "presentValue"
+                                CONF_ANALOG_OUTPUT, "present_value"
                             )
                         },
                     ): write_selector,
@@ -193,7 +194,7 @@ class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
                         CONF_ANALOG_VALUE,
                         description={
                             "suggested_value": self.options.get(
-                                CONF_ANALOG_VALUE, "presentValue"
+                                CONF_ANALOG_VALUE, "present_value"
                             )
                         },
                     ): write_selector,
@@ -201,7 +202,7 @@ class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
                         CONF_BINARY_OUTPUT,
                         description={
                             "suggested_value": self.options.get(
-                                CONF_BINARY_OUTPUT, "presentValue"
+                                CONF_BINARY_OUTPUT, "present_value"
                             )
                         },
                     ): write_selector,
@@ -209,7 +210,7 @@ class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
                         CONF_BINARY_VALUE,
                         description={
                             "suggested_value": self.options.get(
-                                CONF_BINARY_VALUE, "presentValue"
+                                CONF_BINARY_VALUE, "present_value"
                             )
                         },
                     ): write_selector,
@@ -217,7 +218,7 @@ class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
                         CONF_MULTISTATE_OUTPUT,
                         description={
                             "suggested_value": self.options.get(
-                                CONF_MULTISTATE_OUTPUT, "presentValue"
+                                CONF_MULTISTATE_OUTPUT, "present_value"
                             )
                         },
                     ): write_selector,
@@ -225,7 +226,7 @@ class EcoPanelConfigFlow(ConfigFlow, domain=DOMAIN):
                         CONF_MULTISTATE_VALUE,
                         description={
                             "suggested_value": self.options.get(
-                                CONF_MULTISTATE_VALUE, "presentValue"
+                                CONF_MULTISTATE_VALUE, "present_value"
                             )
                         },
                     ): write_selector,
@@ -358,7 +359,7 @@ class OptionsFlowHandler(OptionsFlow):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Get options for what properties to write to per objecttype"""
-        # show form for analogValue, analogOutput, binaryValue, binaryOutput, multiStateValue, multiStateOutput with dropdown choosing either presentValue or relinquishDefault
+        # show form for analogValue, analogOutput, binaryValue, binaryOutput, multiStateValue, multiStateOutput with dropdown choosing either present_value or relinquishDefault
 
         if user_input is not None:
             self.options.update(user_input)
@@ -383,7 +384,7 @@ class OptionsFlowHandler(OptionsFlow):
                         CONF_ANALOG_OUTPUT,
                         description={
                             "suggested_value": self.config_entry.data.get(
-                                CONF_ANALOG_OUTPUT, "presentValue"
+                                CONF_ANALOG_OUTPUT, "present_value"
                             )
                         },
                     ): write_selector,
@@ -391,7 +392,7 @@ class OptionsFlowHandler(OptionsFlow):
                         CONF_ANALOG_VALUE,
                         description={
                             "suggested_value": self.config_entry.data.get(
-                                CONF_ANALOG_VALUE, "presentValue"
+                                CONF_ANALOG_VALUE, "present_value"
                             )
                         },
                     ): write_selector,
@@ -399,7 +400,7 @@ class OptionsFlowHandler(OptionsFlow):
                         CONF_BINARY_OUTPUT,
                         description={
                             "suggested_value": self.config_entry.data.get(
-                                CONF_BINARY_OUTPUT, "presentValue"
+                                CONF_BINARY_OUTPUT, "present_value"
                             )
                         },
                     ): write_selector,
@@ -407,7 +408,7 @@ class OptionsFlowHandler(OptionsFlow):
                         CONF_BINARY_VALUE,
                         description={
                             "suggested_value": self.config_entry.data.get(
-                                CONF_BINARY_VALUE, "presentValue"
+                                CONF_BINARY_VALUE, "present_value"
                             )
                         },
                     ): write_selector,
@@ -415,7 +416,7 @@ class OptionsFlowHandler(OptionsFlow):
                         CONF_MULTISTATE_OUTPUT,
                         description={
                             "suggested_value": self.config_entry.data.get(
-                                CONF_MULTISTATE_OUTPUT, "presentValue"
+                                CONF_MULTISTATE_OUTPUT, "present_value"
                             )
                         },
                     ): write_selector,
@@ -423,7 +424,7 @@ class OptionsFlowHandler(OptionsFlow):
                         CONF_MULTISTATE_VALUE,
                         description={
                             "suggested_value": self.config_entry.data.get(
-                                CONF_MULTISTATE_VALUE, "presentValue"
+                                CONF_MULTISTATE_VALUE, "present_value"
                             )
                         },
                     ): write_selector,

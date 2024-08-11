@@ -17,6 +17,7 @@ from .const import STATETEXT_OFFSET  # JCO
 from .const import (CONF_MULTISTATE_OUTPUT, CONF_MULTISTATE_VALUE, DOMAIN,
                     LOGGER)
 from .coordinator import EcoPanelDataUpdateCoordinator
+from .helper import key_to_property
 
 
 async def async_setup_entry(
@@ -222,12 +223,14 @@ class MultiStateOutputEntity(
 
         pres_val = self.options.index(option) + STATETEXT_OFFSET
 
+        propertyid = self.coordinator.config_entry.data.get(
+            CONF_MULTISTATE_OUTPUT, "present_value"
+        )
+
         await self.coordinator.interface.write_property_v2(
             deviceid=self.deviceid,
             objectid=self.objectid,
-            propertyid=self.coordinator.config_entry.data.get(
-                CONF_MULTISTATE_OUTPUT, "presentValue"
-            ),
+            propertyid=key_to_property(propertyid),
             value=pres_val,
             array_index=None,
             priority=None,
@@ -369,12 +372,14 @@ class MultiStateValueEntity(
 
         pres_val = self.options.index(option) + STATETEXT_OFFSET
 
+        propertyid = self.coordinator.config_entry.data.get(
+            CONF_MULTISTATE_VALUE, "present_value"
+        )
+
         await self.coordinator.interface.write_property_v2(
             deviceid=self.deviceid,
             objectid=self.objectid,
-            propertyid=self.coordinator.config_entry.data.get(
-                CONF_MULTISTATE_VALUE, "presentValue"
-            ),
+            propertyid=key_to_property(propertyid),
             value=pres_val,
             array_index=None,
             priority=None,

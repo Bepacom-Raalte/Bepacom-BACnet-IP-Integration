@@ -114,8 +114,8 @@
     },
     "write_options": {
       "options": {
-        "presentValue": "Present Value",
-        "relinquishDefault": "Relinquish Default"
+        "present_value": "Present Value",
+        "relinquish_default": "Relinquish Default"
       }
     }
   },
