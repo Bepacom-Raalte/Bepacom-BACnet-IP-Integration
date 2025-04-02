@@ -119,6 +119,9 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
             .objects[self.objectid]
             .presentValue
         )
+        
+        if value is None:
+            return value
 
         if (
             resolution := self.coordinator.data.devices[self.deviceid]
@@ -128,6 +131,7 @@ class AnalogInputEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Sensor
             if resolution >= 1:
                 return int(value)
             resolution = decimal_places_needed(resolution)
+            #LOGGER.warning(f"Val {value} Res {resolution}!")
             return round(value, resolution)
         elif (
             covIncrement := self.coordinator.data.devices[self.deviceid]

@@ -17,6 +17,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.dt import utcnow
+from homeassistant.exceptions import InvalidStateError
 
 from .const import CONF_ANALOG_OUTPUT, CONF_ANALOG_VALUE, DOMAIN, LOGGER
 from .coordinator import EcoPanelDataUpdateCoordinator
@@ -145,15 +146,15 @@ class AnalogOutputEntity(
                 .covIncrement
             )
         else:
-            return 1
+            return 0.1
 
     @property
     def native_value(self):
-        value = float(
-            self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .presentValue
-        )
+
+        if value := self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue:
+            value = float(value)
+        else:
+            raise InvalidStateError
 
         if self.native_step >= 1:
             return int(value)
@@ -336,15 +337,15 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
                 .covIncrement
             )
         else:
-            return 1
+            return 0.1
 
     @property
     def native_value(self):
-        value = float(
-            self.coordinator.data.devices[self.deviceid]
-            .objects[self.objectid]
-            .presentValue
-        )
+
+        if value := self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue:
+            value = float(value)
+        else:
+            raise InvalidStateError
 
         if self.native_step >= 1:
             return int(value)

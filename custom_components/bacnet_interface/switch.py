@@ -121,6 +121,7 @@ class BinaryValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Switch
             .objects[self.objectid]
             .presentValue}"
             )
+            return pres_val
 
     @property
     def icon(self):
@@ -258,6 +259,7 @@ class BinaryOutputEntity(
             .objects[self.objectid]
             .presentValue}"
             )
+            return pres_val
 
     @property
     def icon(self):

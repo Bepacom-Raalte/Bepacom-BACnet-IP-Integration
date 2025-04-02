@@ -105,7 +105,21 @@ class BinaryInputEntity(
             self.coordinator.data.devices[self.deviceid]
             .objects[self.objectid]
             .presentValue
+            == True
+        ):
+            return True
+        elif (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
             == "inactive"
+        ):
+            return False
+        elif (
+            self.coordinator.data.devices[self.deviceid]
+            .objects[self.objectid]
+            .presentValue
+            == False
         ):
             return False
 
