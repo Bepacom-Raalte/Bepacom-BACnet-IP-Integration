@@ -146,20 +146,17 @@ class AnalogOutputEntity(
                 .covIncrement
             )
         else:
-            return 0.1
+            return float(0.1)
 
     @property
     def native_value(self):
-
-        if value := self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue:
-            value = float(value)
-        else:
+        value = self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue
+    
+        if value is None:
             raise InvalidStateError
-
-        if self.native_step >= 1:
-            return int(value)
-
-        return value
+    
+        value = float(value)
+        return int(value) if self.native_step >= 1 else value
 
     @property
     def native_max_value(self):
@@ -331,26 +328,23 @@ class AnalogValueEntity(CoordinatorEntity[EcoPanelDataUpdateCoordinator], Number
             .objects[self.objectid]
             .covIncrement
         ):
-            return (
+            return float(
                 self.coordinator.data.devices[self.deviceid]
                 .objects[self.objectid]
                 .covIncrement
             )
         else:
-            return 0.1
+            return float(0.1)
 
     @property
     def native_value(self):
-
-        if value := self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue:
-            value = float(value)
-        else:
+        value = self.coordinator.data.devices[self.deviceid].objects[self.objectid].presentValue
+    
+        if value is None:
             raise InvalidStateError
-
-        if self.native_step >= 1:
-            return int(value)
-
-        return value
+    
+        value = float(value)
+        return int(value) if self.native_step >= 1 else value
 
     @property
     def native_max_value(self):
