@@ -489,7 +489,7 @@ def bacnet_to_ha_units(unit_in: str | None) -> str | None:
         case "squareInches":
             return None
         case "squareMeters":
-            return UnitOfArea.AREA_SQUARE_METERS
+            return UnitOfArea.SQUARE_METERS
         case "squareMetersPerNewton":
             return None
         case "teslas":
