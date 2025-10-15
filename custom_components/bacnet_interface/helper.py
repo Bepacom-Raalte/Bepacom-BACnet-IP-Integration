@@ -14,7 +14,6 @@ from homeassistant.const import (CONCENTRATION_MICROGRAMS_PER_CUBIC_FOOT,
                                  CONCENTRATION_PARTS_PER_MILLION,
                                  CURRENCY_DOLLAR, CURRENCY_EURO, DEGREE,
                                  LIGHT_LUX, PERCENTAGE,
-                                 POWER_VOLT_AMPERE_REACTIVE,
                                  REVOLUTIONS_PER_MINUTE, UnitOfApparentPower,
                                  UnitOfArea,
                                  UnitOfElectricCurrent,
@@ -22,8 +21,9 @@ from homeassistant.const import (CONCENTRATION_MICROGRAMS_PER_CUBIC_FOOT,
                                  UnitOfFrequency, UnitOfInformation,
                                  UnitOfIrradiance, UnitOfLength, UnitOfMass,
                                  UnitOfPower, UnitOfPrecipitationDepth,
-                                 UnitOfPressure, UnitOfSoundPressure,
-                                 UnitOfSpeed, UnitOfTemperature, UnitOfTime,
+                                 UnitOfPressure, UnitOfReactivePower,
+                                 UnitOfSoundPressure, UnitOfSpeed,
+                                 UnitOfTemperature, UnitOfTime,
                                  UnitOfVolume, UnitOfVolumeFlowRate,
                                  UnitOfVolumetricFlux)
 
@@ -513,7 +513,7 @@ def bacnet_to_ha_units(unit_in: str | None) -> str | None:
         case "voltAmpereHours":
             return None
         case "voltAmpereHoursReactive":
-            return POWER_VOLT_AMPERE_REACTIVE
+            return UnitOfReactivePower.VOLT_AMPERE_REACTIVE
         case "voltAmperes":
             return None
         case "voltAmperesReactive":
