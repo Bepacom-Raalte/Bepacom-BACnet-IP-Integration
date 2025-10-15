@@ -6,8 +6,7 @@ from logging import BASIC_FORMAT
 
 from homeassistant.components.number import NumberDeviceClass
 from homeassistant.components.sensor import SensorDeviceClass
-from homeassistant.const import (AREA_SQUARE_METERS,
-                                 CONCENTRATION_MICROGRAMS_PER_CUBIC_FOOT,
+from homeassistant.const import (CONCENTRATION_MICROGRAMS_PER_CUBIC_FOOT,
                                  CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
                                  CONCENTRATION_MILLIGRAMS_PER_CUBIC_METER,
                                  CONCENTRATION_PARTS_PER_BILLION,
@@ -17,6 +16,7 @@ from homeassistant.const import (AREA_SQUARE_METERS,
                                  LIGHT_LUX, PERCENTAGE,
                                  POWER_VOLT_AMPERE_REACTIVE,
                                  REVOLUTIONS_PER_MINUTE, UnitOfApparentPower,
+                                 UnitOfArea,
                                  UnitOfElectricCurrent,
                                  UnitOfElectricPotential, UnitOfEnergy,
                                  UnitOfFrequency, UnitOfInformation,
@@ -489,7 +489,7 @@ def bacnet_to_ha_units(unit_in: str | None) -> str | None:
         case "squareInches":
             return None
         case "squareMeters":
-            return AREA_SQUARE_METERS
+            return UnitOfArea.AREA_SQUARE_METERS
         case "squareMetersPerNewton":
             return None
         case "teslas":
