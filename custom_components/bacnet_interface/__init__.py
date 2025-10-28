@@ -201,9 +201,9 @@ async def async_monitor_data_size(
 		old_devices_dict.update(objects)
 
 	while True:
-		await sleep(30)
+		await sleep(CONST_COMPARE_SIZE)
 
-		if len(coordinator.data.devices) > old_devices:
+		if len(coordinator.data.devices) > len(old_devices):
 			LOGGER.debug(f"Reloading after new device detected!")
 
 			await hass.config_entries.async_schedule_reload(entry.entry_id)
