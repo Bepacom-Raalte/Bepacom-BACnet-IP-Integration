@@ -193,21 +193,12 @@ async def async_monitor_data_size(
 ) -> None:
     """Monitor data size, and reload if it increases."""
 
-    old_devices = deepcopy(coordinator.data.devices)
-    old_devices_dict = {}
+    old_devices_len = len(coordinator.data.devices)
 
     while True:
         await sleep(30)
 
-        if len(coordinator.data.devices) > len(old_devices):
+        if len(coordinator.data.devices) > old_devices_len:
             LOGGER.debug(f"Reloading after new device detected!")
 
             await hass.config_entries.async_schedule_reload(entry.entry_id)
-
-        for device in coordinator.data.devices:
-            if len(coordinator.data.devices[device].objects) > len(
-                old_devices_dict[device]
-            ):
-                LOGGER.debug(f"Increased object size")
-
-                await hass.config_entries.async_schedule_reload(entry.entry_id)

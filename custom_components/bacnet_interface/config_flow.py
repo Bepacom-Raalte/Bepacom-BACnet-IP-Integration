@@ -7,7 +7,6 @@ from typing import Any
 import voluptuous as vol
 from aioecopanel import (DeviceDict, EcoPanelConnectionError,
                          EcoPanelEmptyResponseError, Interface)
-from homeassistant.components.hassio import HassioServiceInfo
 from homeassistant.config_entries import (CONN_CLASS_LOCAL_PUSH, ConfigEntry,
                                           ConfigFlow, ConfigFlowResult,
                                           OptionsFlow)
@@ -17,6 +16,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.selector import selector
+from homeassistant.helpers.service_info.hassio import HassioServiceInfo
 
 from .const import CONF_ANALOG_OUTPUT  # pylint:disable=unused-import
 from .const import (CONF_ANALOG_VALUE, CONF_BINARY_OUTPUT, CONF_BINARY_VALUE,

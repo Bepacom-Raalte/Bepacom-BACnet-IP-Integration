@@ -6,26 +6,24 @@ from logging import BASIC_FORMAT
 
 from homeassistant.components.number import NumberDeviceClass
 from homeassistant.components.sensor import SensorDeviceClass
-from homeassistant.const import (AREA_SQUARE_METERS,
-                                 CONCENTRATION_MICROGRAMS_PER_CUBIC_FOOT,
+from homeassistant.const import (CONCENTRATION_MICROGRAMS_PER_CUBIC_FOOT,
                                  CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
                                  CONCENTRATION_MILLIGRAMS_PER_CUBIC_METER,
                                  CONCENTRATION_PARTS_PER_BILLION,
                                  CONCENTRATION_PARTS_PER_CUBIC_METER,
                                  CONCENTRATION_PARTS_PER_MILLION,
                                  CURRENCY_DOLLAR, CURRENCY_EURO, DEGREE,
-                                 LIGHT_LUX, PERCENTAGE,
-                                 POWER_VOLT_AMPERE_REACTIVE,
-                                 REVOLUTIONS_PER_MINUTE, UnitOfApparentPower,
+                                 LIGHT_LUX, PERCENTAGE, REVOLUTIONS_PER_MINUTE,
+                                 UnitOfApparentPower, UnitOfArea,
                                  UnitOfElectricCurrent,
                                  UnitOfElectricPotential, UnitOfEnergy,
                                  UnitOfFrequency, UnitOfInformation,
                                  UnitOfIrradiance, UnitOfLength, UnitOfMass,
                                  UnitOfPower, UnitOfPrecipitationDepth,
-                                 UnitOfPressure, UnitOfSoundPressure,
-                                 UnitOfSpeed, UnitOfTemperature, UnitOfTime,
-                                 UnitOfVolume, UnitOfVolumeFlowRate,
-                                 UnitOfVolumetricFlux)
+                                 UnitOfPressure, UnitOfReactivePower,
+                                 UnitOfSoundPressure, UnitOfSpeed,
+                                 UnitOfTemperature, UnitOfTime, UnitOfVolume,
+                                 UnitOfVolumeFlowRate, UnitOfVolumetricFlux)
 
 from .const import LOGGER
 
@@ -489,7 +487,7 @@ def bacnet_to_ha_units(unit_in: str | None) -> str | None:
         case "squareInches":
             return None
         case "squareMeters":
-            return AREA_SQUARE_METERS
+            return UnitOfArea.SQUARE_METERS
         case "squareMetersPerNewton":
             return None
         case "teslas":
@@ -513,7 +511,7 @@ def bacnet_to_ha_units(unit_in: str | None) -> str | None:
         case "voltAmpereHours":
             return None
         case "voltAmpereHoursReactive":
-            return POWER_VOLT_AMPERE_REACTIVE
+            return UnitOfReactivePower.VOLT_AMPERE_REACTIVE
         case "voltAmperes":
             return None
         case "voltAmperesReactive":
