@@ -12,12 +12,12 @@ from homeassistant.const import (CONF_ENABLED, CONF_NAME, PERCENTAGE,
                                  UnitOfElectricPotential, UnitOfInformation,
                                  UnitOfIrradiance, UnitOfTemperature)
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import InvalidStateError
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.dt import utcnow
-from homeassistant.exceptions import InvalidStateError
 
 from .const import CONF_ANALOG_OUTPUT, CONF_ANALOG_VALUE, DOMAIN, LOGGER
 from .coordinator import EcoPanelDataUpdateCoordinator

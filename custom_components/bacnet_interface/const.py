@@ -49,3 +49,5 @@ CONF_BINARY_OUTPUT = "binary_output"
 CONF_BINARY_VALUE = "binary_value"
 CONF_MULTISTATE_OUTPUT = "multistate_output"
 CONF_MULTISTATE_VALUE = "multistate_value"
+
+CONST_COMPARE_SIZE = 60

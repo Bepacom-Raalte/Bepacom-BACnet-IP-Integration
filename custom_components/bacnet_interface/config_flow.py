@@ -17,6 +17,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.selector import selector
+from homeassistant.helpers.service_info.hassio import HassioServiceInfo
 
 from .const import CONF_ANALOG_OUTPUT  # pylint:disable=unused-import
 from .const import (CONF_ANALOG_VALUE, CONF_BINARY_OUTPUT, CONF_BINARY_VALUE,
