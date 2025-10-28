@@ -7,6 +7,7 @@ from typing import Any
 import voluptuous as vol
 from aioecopanel import (DeviceDict, EcoPanelConnectionError,
                          EcoPanelEmptyResponseError, Interface)
+from homeassistant.helpers.service_info.hassio import HassioServiceInfo
 from homeassistant.config_entries import (CONN_CLASS_LOCAL_PUSH, ConfigEntry,
                                           ConfigFlow, ConfigFlowResult,
                                           OptionsFlow)

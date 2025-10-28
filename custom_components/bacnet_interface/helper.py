@@ -13,8 +13,9 @@ from homeassistant.const import (CONCENTRATION_MICROGRAMS_PER_CUBIC_FOOT,
                                  CONCENTRATION_PARTS_PER_CUBIC_METER,
                                  CONCENTRATION_PARTS_PER_MILLION,
                                  CURRENCY_DOLLAR, CURRENCY_EURO, DEGREE,
-                                 LIGHT_LUX, PERCENTAGE, REVOLUTIONS_PER_MINUTE,
-                                 UnitOfApparentPower, UnitOfArea,
+                                 LIGHT_LUX, PERCENTAGE,
+                                 REVOLUTIONS_PER_MINUTE, UnitOfApparentPower,
+                                 UnitOfArea,
                                  UnitOfElectricCurrent,
                                  UnitOfElectricPotential, UnitOfEnergy,
                                  UnitOfFrequency, UnitOfInformation,
@@ -22,8 +23,9 @@ from homeassistant.const import (CONCENTRATION_MICROGRAMS_PER_CUBIC_FOOT,
                                  UnitOfPower, UnitOfPrecipitationDepth,
                                  UnitOfPressure, UnitOfReactivePower,
                                  UnitOfSoundPressure, UnitOfSpeed,
-                                 UnitOfTemperature, UnitOfTime, UnitOfVolume,
-                                 UnitOfVolumeFlowRate, UnitOfVolumetricFlux)
+                                 UnitOfTemperature, UnitOfTime,
+                                 UnitOfVolume, UnitOfVolumeFlowRate,
+                                 UnitOfVolumetricFlux)
 
 from .const import LOGGER
 
