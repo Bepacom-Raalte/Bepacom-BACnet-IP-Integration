@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from asyncio import sleep
-from copy import deepcopy
+from copy import copy
 
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
@@ -193,7 +193,12 @@ async def async_monitor_data_size(
 ) -> None:
     """Monitor data size, and reload if it increases."""
 
-    old_devices_len = len(coordinator.data.devices)
+    old_devices = copy(coordinator.data.devices)
+    old_devices_dict = {}
+
+    for device in old_devices:
+        objects = {device: copy(coordinator.data.devices[device].objects)}
+        old_devices_dict.update(objects)
 
     while True:
         await sleep(30)
@@ -202,3 +207,11 @@ async def async_monitor_data_size(
             LOGGER.debug(f"Reloading after new device detected!")
 
             await hass.config_entries.async_schedule_reload(entry.entry_id)
+
+        for device in coordinator.data.devices:
+            if len(coordinator.data.devices[device].objects) > len(
+                old_devices_dict[device]
+            ):
+                LOGGER.debug(f"Increased object size")
+
+                await hass.config_entries.async_schedule_reload(entry.entry_id)
